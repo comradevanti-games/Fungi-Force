@@ -1,0 +1,16 @@
+{
+    "name": "TeamShrimp.GGJ23.Editor",
+    "rootNamespace": "TeamShrimp.GGJ23",
+    "references": [
+        "GUID:a688d45938c02e54ead30e83ad500010"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

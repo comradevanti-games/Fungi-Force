@@ -1,0 +1,14 @@
+{
+    "name": "TeamShrimp.GGJ23",
+    "rootNamespace": "TeamShrimp.GGJ23",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
