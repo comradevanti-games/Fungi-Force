@@ -8,6 +8,7 @@ namespace Networking
 {
     public class IncomingCommandHandler : MonoBehaviour
     {
+        public bool debug;
         public delegate BaseCommand CommandHandlerMapping(BinaryReader br);
 
         private Dictionary<CommandType, CommandHandlerMapping> handler = new Dictionary<CommandType, CommandHandlerMapping>();
@@ -40,14 +41,7 @@ namespace Networking
             foreach (var subscribedCommand in subscribedNetworkCommands)
             {
                 subscribers[subscribedCommand.ct] = subscribedCommand.subscribers;
-            }
-            
-            
-            Debug.Log("SUBSCRIBERS: ");
-            foreach (var VARIABLE in subscribers)
-            {
-                Debug.Log(VARIABLE);
-            }
+            } 
         }
         
         public void HandleCommand(byte[] incoming)
@@ -80,7 +74,7 @@ namespace Networking
                 Debug.LogError("RECEIVED EVENT, BUT NO SUBSCRIBERS FOR EVENT TYPE " + type);
                 return;
             }
-            Debug.Log("RUNNING SUBSCRIBER for event " + bc);
+            if(debug) Debug.Log("RUNNING SUBSCRIBER for event " + bc);
             subscribers[type].Invoke(bc);
         }
 
