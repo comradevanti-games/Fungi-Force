@@ -1,3 +1,4 @@
+using System;
 using ENet;
 using Networking;
 using UnityEngine;
@@ -6,6 +7,7 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
 {
     public class NetworkManager : MonoBehaviour
     {
+        public bool debug;
         public ushort port = 808;
         public bool isServer = true;
         public string ip = "127.0.0.1";
@@ -15,7 +17,7 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
         public static NetworkManager server;
         public static NetworkManager client;
         private IncomingCommandHandler _incomingCommandHandler;
-        
+        private int reconnectAttempts = 0;
         
         private void Start()
         {
@@ -26,10 +28,8 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
                 client = this;
             netman = this;
             StartNewNetworkConnection();
-            
         }
-        
-        
+
         private void StartNewNetworkConnection()
         {
             Library.Initialize();
@@ -48,10 +48,10 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
             // CREATING SERVER
             host = new Host();
             Address address = new Address {Port = port};
-
-            Debug.Log("CREATING SERVER");
+            if(debug)
+                Debug.Log("CREATING SERVER");
             host.Create(address, 1);
-            Debug.Log("CREATED AS SERVER");
+            if(debug) Debug.Log("CREATED AS SERVER");
         }
         
         
@@ -64,9 +64,9 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
             address.Port = port;
             
             host.Create();
-            Debug.Log("CONNECTING TO " + ip + ":" + port);
+            if(debug) Debug.Log("CONNECTING TO " + ip + ":" + port);
             otherClient = host.Connect(address);
-            Debug.Log("CONNECTION ESTABLISHED");
+            if(debug) Debug.Log("CONNECTION ESTABLISHED");
         }
 
         public void FixedUpdate()
@@ -77,11 +77,25 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
         private void HandleENetUpdate()
         {
             ENet.Event netEvent;
-            
-            if (host.CheckEvents(out netEvent) <= 0)
+            try
             {
-                if (host.Service(0, out netEvent) <= 0)
-                    return;
+                if (host.CheckEvents(out netEvent) <= 0)
+                {
+                    if (host.Service(0, out netEvent) <= 0)
+                        return;
+                    var i = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                if (reconnectAttempts > 5)
+                {
+                    Debug.LogError("DESTROYING NETWORK MANAGER BECAUSE CONNECTION COULD NOT BE REESTABLISHED");
+                    Destroy(gameObject);
+                }
+
+                Reconnect();
+                return;
             }
 
             switch (netEvent.Type)
@@ -93,24 +107,24 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
                     if (isServer)
                     {
                         otherClient = netEvent.Peer;
-                        Debug.Log("Client connected to server - ID: " + otherClient.ID);
+                        if(debug) Debug.Log("Client connected to server - ID: " + otherClient.ID);
                     }
                     else
                     {
-                        Debug.Log("Client established connection to server - server ID: " + otherClient.ID);
+                        if(debug) Debug.Log("Client established connection to server - server ID: " + otherClient.ID);
                     }
                     break;
 
                 case ENet.EventType.Disconnect:
-                    Debug.Log("Client disconnected from server");
+                    if(debug) Debug.Log("Client disconnected from server");
                     break;
 
                 case ENet.EventType.Timeout:
-                    Debug.Log("Client connection timeout");
+                    if(debug) Debug.Log("Client connection timeout");
                     break;
 
                 case ENet.EventType.Receive:
-                    Debug.Log("Packet received from server - Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length);
+                    if(debug) Debug.Log("Packet received from server - Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length);
                     byte[] bytes = new byte[netEvent.Packet.Length];
                     netEvent.Packet.CopyTo(bytes);
                     ManageIncomingPacket(bytes);
@@ -136,8 +150,18 @@ namespace TeamShrimp.GGJ23.Runtime.Networking
 
         private void Reconnect()
         {
-            StopNetworkConnection();
-            StartNewNetworkConnection();
+            reconnectAttempts++;
+            try
+            {
+                StopNetworkConnection();
+                StartNewNetworkConnection();
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+
+            reconnectAttempts = 0;
         }
         
         private void StopNetworkConnection()

@@ -1,17 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Networking;
-using TeamShrimp.GGJ23;
 using TeamShrimp.GGJ23.Runtime.Networking;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace TeamShrimp.GGJ23
 {
     public class MushroomManager : MonoBehaviour
     {
-
+        public bool debug;
+        
         public static MushroomManager Instance;
 
         private List<ShroomBase> _shroomsInGame;
@@ -94,7 +92,8 @@ namespace TeamShrimp.GGJ23
 
         public ShroomBase TryGetShroomAtPositon(Vector2Int gridPosition)
         {
-            Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
+            if(debug)
+                Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
             // TODO Change to Map request
             RaycastHit2D hit = Physics2D.CircleCast(gridPosition, cellLength, Vector2.zero);
             if (hit && hit.collider.CompareTag("Shroom"))
@@ -133,8 +132,11 @@ namespace TeamShrimp.GGJ23
 
             PlaceCommand placeCommand = new PlaceCommand((byte) placedShroom.ShroomType.Id, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
             NetworkManager.client.SendCommand(placeCommand);
-            Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);
-            Debug.Log("BYTE TO BIT STRING: " + 0b101);
+            if (debug)
+            {
+                Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);
+                Debug.Log("BYTE TO BIT STRING: " + 0b101);
+            }
             return placedShroom;
         }
 
