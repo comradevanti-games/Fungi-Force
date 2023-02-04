@@ -43,7 +43,7 @@ namespace TeamShrimp.GGJ23
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
-            TryFindShroom(pos).IsSome();
+            TryFindShroom(pos).IsNone();
 
         private void InstantiateMapWith(int size)
         {
