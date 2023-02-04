@@ -1,0 +1,64 @@
+# Blender 3.4.1 MTL File: 'Power.blend'
+# www.blender.org
+
+newmtl Material.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.744803 0.539530
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.581463 0.092058 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.005
+Ns 111.111099
+Ka 1.000000 1.000000 1.000000
+Kd 0.110689 0.022260 0.002444
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl MushroomCanon
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 1.800000 C:/Users/Alexander/OneDrive - Fachhochschule St. Pölten/GlobalGameJam/ShroomGame/TurretTexture/MushroomCanon_Normal.png
+
+newmtl MushroomPower
+Ns 40.315590
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Users/Alexander/OneDrive - Fachhochschule St. Pölten/GlobalGameJam/ShroomGame/Power/Textures/MushroomPower_BaseColor.png
+map_Bump -bm 1.000000 C:/Users/Alexander/OneDrive - Fachhochschule St. Pölten/GlobalGameJam/ShroomGame/Power/Textures/MushroomPower_Normal.png
