@@ -2,7 +2,8 @@
     "name": "TeamShrimp.GGJ23",
     "rootNamespace": "TeamShrimp.GGJ23",
     "references": [
-        "GUID:abae1860b9cc9c84289013571e170b12"
+        "Unity.TextMeshPro",
+        "Dev.ComradeVanti.OptUnity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

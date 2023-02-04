@@ -20,4 +20,5 @@ namespace TeamShrimp.GGJ23
             Blackboard.IsHost = isHost;
         }
     }
+    
 }
