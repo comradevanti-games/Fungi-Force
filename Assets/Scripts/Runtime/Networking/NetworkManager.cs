@@ -1,4 +1,3 @@
-using System;
 using ENet;
 using UnityEngine;
 
@@ -7,25 +6,35 @@ namespace TeamShrimp.GGJ23.Networking
     [RequireComponent(typeof(IncomingCommandHandler))]
     public class NetworkManager : MonoBehaviour
     {
-        public bool debug;
-        public ushort port = 808;
-        public bool isServer = true;
-        public string ip = "127.0.0.1";
-        public Host host;
-        public Peer otherClient;
-        public static NetworkManager netman;
-        public static NetworkManager server;
-        public static NetworkManager client;
-        private IncomingCommandHandler _incomingCommandHandler;
-        private ITransferLayer transferLayer;
-        public TransferLayer networkingBackend;
-        
         public enum TransferLayer
         {
             ENET
         }
-        
-        private void Start()
+
+        public static NetworkManager netman;
+        public static NetworkManager server;
+        public static NetworkManager client;
+        public bool debug;
+        public ushort port = 808;
+        public string ip = "127.0.0.1";
+        public TransferLayer networkingBackend;
+        private IncomingCommandHandler _incomingCommandHandler;
+        public Host host;
+        public Peer otherClient;
+        private ITransferLayer transferLayer;
+
+        public void FixedUpdate()
+        {
+            // Debug.Log("ENT UPDATE");
+            var bytes = transferLayer.NetUpdate();
+            if (bytes != null && bytes.Length > 0)
+            {
+                Debug.Log("RECEIVED DATA");
+                ManageIncomingPacket(bytes);
+            }
+        }
+
+        public void Init(bool isServer)
         {
             _incomingCommandHandler = GetComponent<IncomingCommandHandler>();
             if (isServer)
@@ -39,52 +48,31 @@ namespace TeamShrimp.GGJ23.Networking
                     transferLayer = new ENetTransfer();
                     break;
             }
+
             transferLayer.SetConnectionInfo(ip, port);
             transferLayer.SetServer(isServer);
-            StartNewNetworkConnection();
-            
-        }
 
-        private void StartNewNetworkConnection()
-        {
             if (isServer)
-            {
                 transferLayer.CreateServer();
-            }
             else
-            {
                 transferLayer.CreateClient();
-            }
         }
 
-        
-        
+
         private void CreateClient()
         {
             Library.Initialize();
             // CREATING CLIENT
             host = new Host();
-            Address address = new Address();
+            var address = new Address();
             address.SetHost(ip);
             address.Port = port;
-            
+
             host.Create();
-            if(debug) Debug.Log("CONNECTING TO " + ip + ":" + port);
+            if (debug) Debug.Log("CONNECTING TO " + ip + ":" + port);
             otherClient = host.Connect(address);
-            if(debug) Debug.Log("CONNECTION ESTABLISHED");
+            if (debug) Debug.Log("CONNECTION ESTABLISHED");
         }
-
-        public void FixedUpdate()
-        {
-            // Debug.Log("ENT UPDATE");
-            byte[] bytes = transferLayer.NetUpdate();
-            if (bytes != null && bytes.Length > 0)
-            {
-                Debug.Log("RECEIVED DATA");
-                ManageIncomingPacket(bytes);
-            }
-        }
-
 
 
         private void ManageIncomingPacket(byte[] incoming)
@@ -96,7 +84,5 @@ namespace TeamShrimp.GGJ23.Networking
         {
             transferLayer.Send(baseCommand, channelId);
         }
-
-
     }
 }

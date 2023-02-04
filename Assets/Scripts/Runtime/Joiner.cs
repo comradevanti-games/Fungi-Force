@@ -21,6 +21,12 @@ namespace TeamShrimp.GGJ23
         private string GuestName => nameInput.text;
 
 
+        private void OnEnable()
+        {
+            networkManager.Init(false);
+        }
+        
+
         public void OnJoinPressed()
         {
             SendConnectCommand();
