@@ -3,6 +3,7 @@ using System.Linq;
 using ComradeVanti.CSharpTools;
 using TeamShrimp.GGJ23.Networking;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TeamShrimp.GGJ23
 {
@@ -25,18 +26,18 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private GameObject initialPrefab;
 
         [SerializeField] private GhostShroom ghostShroom;
+        [SerializeField] private NetworkManager networkManager;
 
         [SerializeField] private float maxDistanceAllowed;
         
         [SerializeField] private MapKeeper map;
+        [SerializeField] private UnityEvent onShroomPlaced;
 
         public GameObject SelectedShroomPrefab
         {
             set => _selectedShroomPrefab = value;
         }
-
-        private MushroomManager() { }
-
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -146,9 +147,10 @@ namespace TeamShrimp.GGJ23
             }
             
             placedShroom.Initialize();
+            onShroomPlaced.Invoke();
 
             PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
-            NetworkManager.client.SendCommand(placeCommand);
+            networkManager.SendCommand(placeCommand);
             if (debug)
             {
                 Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);

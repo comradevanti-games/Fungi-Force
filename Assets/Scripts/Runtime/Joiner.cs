@@ -23,9 +23,7 @@ namespace TeamShrimp.GGJ23
 
         public void OnJoinPressed()
         {
-            networkManager.ip = Ip;
-            networkManager.port = Port;
-            networkManager.Init(false);
+            networkManager.InitAsGuest(Ip, Port);
             Invoke(nameof(SendConnectCommand), 0.1f);
         }
 
@@ -65,8 +63,9 @@ namespace TeamShrimp.GGJ23
             GoToGame();
         }
 
-        private static void GoToGame()
+        private void GoToGame()
         {
+            networkManager.CacheToBlackboard();
             SceneManager.LoadScene("Game");
         }
 

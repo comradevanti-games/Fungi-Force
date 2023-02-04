@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using ComradeVanti.CSharpTools;
+using TeamShrimp.GGJ23.Networking;
 
 namespace TeamShrimp.GGJ23
 {
@@ -25,5 +26,8 @@ namespace TeamShrimp.GGJ23
             get => isHost.DefaultValue(true);
             set => isHost = Opt.Some(value);
         }
+
+        public static IOpt<Connection> EstablishedConnection { get; set; } =
+            Opt.None<Connection>();
     }
 }

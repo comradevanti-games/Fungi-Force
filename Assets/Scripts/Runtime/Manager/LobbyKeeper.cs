@@ -16,7 +16,7 @@ namespace TeamShrimp.GGJ23
 
         private void OnEnable()
         {
-            networkManager.Init(true);
+            networkManager.InitAsHost();
             ReadInput();
         }
 
@@ -73,8 +73,9 @@ namespace TeamShrimp.GGJ23
             GoToGame();
         }
 
-        private static void GoToGame()
+        private  void GoToGame()
         {
+            networkManager.CacheToBlackboard();
             SceneManager.LoadScene("Game");
         }
     }
