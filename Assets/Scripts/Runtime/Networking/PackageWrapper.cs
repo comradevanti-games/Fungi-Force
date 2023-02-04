@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace Networking
@@ -46,6 +47,17 @@ namespace Networking
         public void Write(byte b)
         {
             this.Writer.Write(b);
+        }
+
+        public void Write(string s)
+        {
+            if (s.Length > 255)
+            {
+                Debug.LogError("STRINGS LONGER THAN 255 CHARACTERS ARE NOT SUPPORTED, OFFENDING STRING: " + s);
+            }
+            this.Writer.Write((byte)s.Length);
+            var nameBytes = Encoding.ASCII.GetBytes(s);
+            this.Writer.Write(nameBytes);
         }
 
         public void Write(long l)

@@ -19,9 +19,17 @@ namespace Networking
         
         public void Start()
         {
-            Register(CommandType.READY, HandleCommandType<ReadyCommand>);
-            Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);
-            Register(CommandType.CUT, HandleCommandType<CutCommand>);
+            handler = new Dictionary<CommandType, CommandHandlerMapping>()
+            {
+                {CommandType.READY, HandleCommandType<ReadyCommand>},
+                {CommandType.PLACE, HandleCommandType<PlaceCommand>},
+                {CommandType.CUT, HandleCommandType<CutCommand>},
+                {CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>}
+            };
+            // Register(CommandType.READY, HandleCommandType<ReadyCommand>);
+            // Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);
+            // Register(CommandType.CUT, HandleCommandType<CutCommand>);
+            // Register(CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>);
             SubscriptionsToDict();
         }
 

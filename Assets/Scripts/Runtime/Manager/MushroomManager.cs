@@ -130,7 +130,7 @@ namespace TeamShrimp.GGJ23
             
             placedShroom.Initialize();
 
-            PlaceCommand placeCommand = new PlaceCommand((byte) placedShroom.ShroomType.Id, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
+            PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
             NetworkManager.client.SendCommand(placeCommand);
             if (debug)
             {

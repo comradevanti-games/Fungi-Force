@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace TeamShrimp.GGJ23.Runtime.Networking
 {
+    [RequireComponent(typeof(IncomingCommandHandler))]
     public class NetworkManager : MonoBehaviour
     {
         public bool debug;
