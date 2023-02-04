@@ -53,9 +53,7 @@ namespace TeamShrimp.GGJ23
                 PlayerNamesByTeam = Blackboard.Game.PlayerNamesByTeam
                     .Add(Team.Blue, playerName)
             };
-            SendConnectInit();
-            SendWorldInit();
-            GoToGame();
+            Invoke(nameof(SendConnectInit), 0.1f);
         }
 
         private void SendConnectInit()
@@ -63,6 +61,7 @@ namespace TeamShrimp.GGJ23
             var hostName = Blackboard.Game.PlayerNamesByTeam[Team.Red];
             var cmd = new ConnectionInitCommand(hostName);
             networkManager.SendCommand(cmd);
+            Invoke(nameof(SendWorldInit), 0.1f);
         }
 
         private void SendWorldInit()
@@ -71,6 +70,7 @@ namespace TeamShrimp.GGJ23
                 Blackboard.Game.MapSize,
                 Blackboard.Game.MapSeed);
             networkManager.SendCommand(cmd);
+            GoToGame();
         }
 
         private static void GoToGame()

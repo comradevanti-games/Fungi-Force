@@ -20,20 +20,19 @@ namespace TeamShrimp.GGJ23
 
         private string GuestName => nameInput.text;
 
-        
 
         public void OnJoinPressed()
         {
             networkManager.ip = Ip;
             networkManager.port = Port;
             networkManager.Init(false);
-            SendConnectCommand();
+            Invoke(nameof(SendConnectCommand), 0.1f);
         }
 
         public void OnConnectedCmd(BaseCommand cmd)
         {
-            if(Blackboard.IsHost) return;
-            
+            if (Blackboard.IsHost) return;
+
             if (cmd is ConnectionInitCommand connectCmd)
                 OnConnected(connectCmd);
             else throw new Exception("Incorrect cmd type!");
