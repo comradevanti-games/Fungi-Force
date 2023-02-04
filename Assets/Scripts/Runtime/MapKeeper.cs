@@ -78,6 +78,11 @@ namespace TeamShrimp.GGJ23
             return GridToWorldPos(pos);
         }
 
+        public StructureType GetStructureType(String name)
+        {
+            return this.structureTypesByName[name];
+        }
+
         private void InstantiateGameMap()
         {
             InstantiateMapWith(Blackboard.Game.MapSize);

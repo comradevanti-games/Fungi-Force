@@ -194,5 +194,26 @@ namespace TeamShrimp.GGJ23
         {
             return map.GridToWorldPos(shroomPosition);
         }
+
+        public void ReadPlaceCommand(BaseCommand baseCommand)
+        {
+            PlaceCommand placeCommand = (PlaceCommand) baseCommand;
+            if (placeCommand.ValidPackage)
+            {
+                Vector2Int shroomPosition = placeCommand.pos;
+                Vector2Int parentPosition = placeCommand.sourcePos;
+                StructureType mushType = map.GetStructureType(placeCommand.mushType);
+                
+                SyncShroom(shroomPosition, parentPosition, mushType);
+            }
+        }
+
+        public void SyncShroom(Vector2Int shroomPosition, Vector2Int parentPosition, StructureType mushtype)
+        {
+            ShroomBase shroom = Instantiate(mushtype.Prefab).GetComponent<ShroomBase>();
+            shroom.WorldPosition = GetWorldPositionForShroomPosition(shroomPosition);
+            shroom.Parent = GetMushroomAtPosition(parentPosition);
+            shroom.Initialize();
+        }
     }
 }
