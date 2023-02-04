@@ -24,7 +24,8 @@ namespace Networking
                 {CommandType.READY, HandleCommandType<ReadyCommand>},
                 {CommandType.PLACE, HandleCommandType<PlaceCommand>},
                 {CommandType.CUT, HandleCommandType<CutCommand>},
-                {CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>}
+                {CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>},
+                {CommandType.CONNECT, HandleCommandType<ConnectionInitCommand>}
             };
             // Register(CommandType.READY, HandleCommandType<ReadyCommand>);
             // Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);

@@ -26,7 +26,7 @@ namespace Networking
 
         public override string ToString()
         {
-            return $"{nameof(mushType)}: {mushType}, {nameof(id)}: {id}, {nameof(pos)}: {pos}, {nameof(sourcePos)}: {sourcePos}";
+            return $"PLACE COMMAND {nameof(mushType)}: {mushType}, {nameof(id)}: {id}, {nameof(pos)}: {pos}, {nameof(sourcePos)}: {sourcePos}";
         }
 
         public PlaceCommand(BinaryReader reader)
