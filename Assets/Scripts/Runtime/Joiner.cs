@@ -32,7 +32,9 @@ namespace TeamShrimp.GGJ23
 
         public void OnConnectedCmd(BaseCommand cmd)
         {
-            if (!Blackboard.IsHost && cmd is ConnectionInitCommand connectCmd)
+            if(Blackboard.IsHost) return;
+            
+            if (cmd is ConnectionInitCommand connectCmd)
                 OnConnected(connectCmd);
             else throw new Exception("Incorrect cmd type!");
         }
