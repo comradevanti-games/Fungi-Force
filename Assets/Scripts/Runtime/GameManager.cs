@@ -6,8 +6,8 @@ namespace TeamShrimp.GGJ23
 {
     public class GameManager : MonoBehaviour
     {
-        public UnityEvent onGameStarted;
-        public UnityEvent onRoundStarted;
+        [SerializeField] private UnityEvent onGameStarted;
+        [SerializeField] private UnityEvent onRoundStarted;
         
         private Team currentTeam = Team.Red;
 
