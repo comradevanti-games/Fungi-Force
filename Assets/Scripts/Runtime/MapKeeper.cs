@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using ComradeVanti.CSharpTools;
+using Dev.ComradeVanti;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,10 +13,12 @@ namespace TeamShrimp.GGJ23
         private const string StructureTypeResourcePath = "StructureTypes";
 
         [SerializeField] private Tilemap groundTilemap;
+
+        private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
+            new Dictionary<Vector2Int, ShroomBase>();
+
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
-
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
-
 
         private void Awake()
         {
@@ -26,6 +30,18 @@ namespace TeamShrimp.GGJ23
         {
             InstantiateMapWith(10);
         }
+
+        public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
+            shroomsByPosition.TryGet(pos);
+
+        public void AddShroom(ShroomBase shroom)
+        {
+            var pos = shroom.ShroomPosition;
+            shroomsByPosition.Add(pos, shroom);
+        }
+
+        public bool CanPlace(ShroomType type, Vector2Int pos) =>
+            TryFindShroom(pos).IsSome();
 
         private void InstantiateMapWith(int size)
         {
@@ -46,8 +62,12 @@ namespace TeamShrimp.GGJ23
             }
 
             foreach (var (pos, structure) in map.StructuresByPosition)
-                Instantiate(structure.Type.Prefab, pos.To3(),
+            {
+                var go = Instantiate(structure.Type.Prefab, pos.To3(),
                     Quaternion.identity);
+                go.TryGetComponent<ShroomBase>()
+                    .Iter(AddShroom);
+            }
         }
 
         private void LoadTileTypes()
