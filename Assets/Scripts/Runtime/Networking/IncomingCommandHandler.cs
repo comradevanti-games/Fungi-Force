@@ -60,7 +60,7 @@ namespace TeamShrimp.GGJ23.Networking
             {
                 type = (CommandType) incoming[0];
             }
-            catch (Exception e)
+            catch 
             {
                 Debug.LogError("INVALID PACKET TYPE RECEIVED: " + (int)incoming[0]);
                 return;

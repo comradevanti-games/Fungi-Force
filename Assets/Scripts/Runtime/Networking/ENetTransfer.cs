@@ -37,10 +37,10 @@ namespace TeamShrimp.GGJ23.Networking
                 {
                     if (host.Service(0, out netEvent) <= 0)
                         return new byte[0];
-                    var i = 0;
+                    //var i = 0;
                 }
             }
-            catch (Exception e)
+            catch 
             {
                 Reconnect();
                 return new byte[0];
@@ -131,7 +131,7 @@ namespace TeamShrimp.GGJ23.Networking
                 else
                     CreateClient();
             }
-            catch (Exception e)
+            catch 
             {
                 return;
             }
