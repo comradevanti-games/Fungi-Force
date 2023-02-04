@@ -6,12 +6,6 @@ namespace TeamShrimp.GGJ23.Networking
     [RequireComponent(typeof(IncomingCommandHandler))]
     public class NetworkManager : MonoBehaviour
     {
-        public enum TransferLayer
-        {
-            ENET,
-            DUMMY_TRANSFER
-        }
-
         private bool isInitialized = false;
         public static NetworkManager netman;
         public static NetworkManager server;
@@ -19,7 +13,7 @@ namespace TeamShrimp.GGJ23.Networking
         public bool debug;
         public ushort port = 808;
         public string ip = "127.0.0.1";
-        public TransferLayer networkingBackend;
+        public ITransferLayer.Type networkingBackend;
         private IncomingCommandHandler _incomingCommandHandler;
         public Host host;
         public Peer otherClient;
@@ -48,10 +42,10 @@ namespace TeamShrimp.GGJ23.Networking
             netman = this;
             switch (networkingBackend)
             {
-                case TransferLayer.ENET:
+                case ITransferLayer.Type.ENET:
                     transferLayer = new ENetTransfer();
                     break;
-                case TransferLayer.DUMMY_TRANSFER:
+                case ITransferLayer.Type.DUMMY_TRANSFER:
                     transferLayer = new StubTransfer();
                     break;
             }
