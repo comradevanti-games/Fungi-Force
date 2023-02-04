@@ -7,7 +7,9 @@ namespace TeamShrimp.GGJ23
     public class GameManager : MonoBehaviour
     {
         public UnityEvent onGameStarted;
-
+        public UnityEvent onRoundStarted;
+        
+        private Team currentTeam = Team.Red;
 
         private void Start()
         {
@@ -24,6 +26,16 @@ namespace TeamShrimp.GGJ23
         {
             Debug.Log("Start game");
             onGameStarted.Invoke();
+
+            if (Blackboard.IsHost)
+                StartRound();
         }
+
+        private void StartRound()
+        {
+            Debug.Log($"Round started for {currentTeam}");
+            onRoundStarted.Invoke();
+        }
+        
     }
 }
