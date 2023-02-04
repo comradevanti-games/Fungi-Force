@@ -31,6 +31,9 @@ MonoBehaviour:
     m_Url: https://package.openupm.com
     m_Scopes:
     - com.openupm
+    - dev.comradevanti.opt-unity
+    - dev.comradevanti.rect-constraints
+    - org.nuget.comradevanti.csharptools.opt
     - org.nuget.system.buffers
     - org.nuget.system.collections.immutable
     - org.nuget.system.memory
@@ -45,5 +48,5 @@ MonoBehaviour:
     m_Modified: 0
     m_ErrorMessage: 
     m_UserModificationsInstanceId: -838
-    m_OriginalInstanceId: -840
+    m_OriginalInstanceId: -842
   m_LoadAssets: 0
