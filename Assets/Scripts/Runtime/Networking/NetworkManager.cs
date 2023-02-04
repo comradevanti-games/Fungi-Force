@@ -8,7 +8,8 @@ namespace TeamShrimp.GGJ23.Networking
     {
         public enum TransferLayer
         {
-            ENET
+            ENET,
+            DUMMY_TRANSFER
         }
 
         private bool isInitialized = false;
@@ -49,6 +50,9 @@ namespace TeamShrimp.GGJ23.Networking
             {
                 case TransferLayer.ENET:
                     transferLayer = new ENetTransfer();
+                    break;
+                case TransferLayer.DUMMY_TRANSFER:
+                    transferLayer = new StubTransfer();
                     break;
             }
             if(debug) Debug.Log("INIT CALLED WITH " + ip + ":" + port);
