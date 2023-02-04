@@ -123,6 +123,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &938238290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6750856453333890295, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
+  m_PrefabInstance: {fileID: 9163633536467021873}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &938238293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938238290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d39951911e505f4b88751f6dc1984d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1170295549}
+  cameraSmoothing: 0.1
 --- !u!1 &1170295547
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,19 +518,14 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 7183072269508939756, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
-      propertyPath: cellLength
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183072269508939756, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
       propertyPath: ghostShroom
       value: 
       objectReference: {fileID: 3056094420741746306}
-    - target: {fileID: 7183072269508939756, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
-      propertyPath: maxDistanceAllowed
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6750856453333890295, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 938238293}
   m_SourcePrefab: {fileID: 100100000, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
