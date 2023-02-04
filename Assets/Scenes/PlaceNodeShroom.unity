@@ -451,9 +451,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 938238293, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
+      propertyPath: pointyTop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 938238293, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1170295549}
+    - target: {fileID: 938238293, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
+      propertyPath: TESTING_MAP_SIZE
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1160280945074648279, guid: 875a35bef2d140444a4c922ee377f358, type: 3}
       propertyPath: m_RootOrder
       value: 3

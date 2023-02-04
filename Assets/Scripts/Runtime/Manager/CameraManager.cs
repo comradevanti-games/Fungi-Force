@@ -13,6 +13,10 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private float cameraSmoothing;
 
+        [SerializeField] private bool pointyTop;
+
+        [SerializeField] private float TESTING_MAP_SIZE;
+
         private Vector3 _previousMousePosition;
 
         private float _mouseChangeX, _mouseChangeY;
@@ -20,11 +24,30 @@ namespace TeamShrimp.GGJ23
         public static CameraManager Instance;
 
         public Camera MainCamera => mainCamera;
+        
+        public float MapSize { get; set; }
+
+        private float _mapWidth, _mapHeight;
 
         // Start is called before the first frame update
         void Start()
         {
             Instance = this;
+            if (MapSize == 0f)
+            {
+                MapSize = TESTING_MAP_SIZE;
+            }
+
+            if (pointyTop)
+            {
+                this._mapWidth = (float)(MapSize * Math.Sqrt(3));
+                this._mapHeight = 2 * MapSize;
+            }
+            else
+            {
+                this._mapWidth = 2 * MapSize;
+                this._mapHeight = (float)(MapSize * Math.Sqrt(3));
+            }
         }
 
         // Update is called once per frame
@@ -63,6 +86,12 @@ namespace TeamShrimp.GGJ23
                 this._mouseChangeX = 0.0f;
                 this._mouseChangeY = 0.0f;
             }
+
+            MainCamera.transform.position = new Vector3(
+                Mathf.Clamp(MainCamera.transform.position.x, -_mapWidth / 2, _mapWidth / 2),
+                Mathf.Clamp(MainCamera.transform.position.y, -_mapHeight / 2, _mapHeight / 2),
+                MainCamera.transform.position.z
+            );
         }
     }
 }
