@@ -11,6 +11,7 @@ namespace TeamShrimp.GGJ23.Networking
             ENET
         }
 
+        private bool isInitialized = false;
         public static NetworkManager netman;
         public static NetworkManager server;
         public static NetworkManager client;
@@ -25,6 +26,8 @@ namespace TeamShrimp.GGJ23.Networking
 
         public void FixedUpdate()
         {
+            if(!isInitialized) return;
+            
             // Debug.Log("ENT UPDATE");
             var bytes = transferLayer.NetUpdate();
             if (bytes != null && bytes.Length > 0)
@@ -56,6 +59,8 @@ namespace TeamShrimp.GGJ23.Networking
                 transferLayer.CreateServer();
             else
                 transferLayer.CreateClient();
+
+            isInitialized = true;
         }
 
 
