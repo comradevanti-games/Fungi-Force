@@ -6,6 +6,7 @@ namespace TeamShrimp.GGJ23
     public static class Blackboard
     {
         private static IOpt<Game> game = Opt.None<Game>();
+        private static IOpt<bool> isHost = Opt.None<bool>();
 
         private static readonly Game TestGame = new Game(
             ImmutableDictionary<Team, string>.Empty
@@ -19,6 +20,10 @@ namespace TeamShrimp.GGJ23
             set => game = Opt.Some(value);
         }
 
-        public static bool IsHost { get; set; }
+        public static bool IsHost
+        {
+            get => isHost.DefaultValue(true);
+            set => isHost = Opt.Some(value);
+        }
     }
 }
