@@ -696,6 +696,21 @@ MonoBehaviour:
   ghostShroom: {fileID: 1393869277}
   maxDistanceAllowed: 2
   map: {fileID: 2121146357}
+  onShroomPlaced:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2121146359}
+        m_TargetAssemblyTypeName: TeamShrimp.GGJ23.GameManager, TeamShrimp.GGJ23
+        m_MethodName: OnPlayerAction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &2121146359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -709,5 +724,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onGameStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onRoundStarted:
     m_PersistentCalls:
       m_Calls: []

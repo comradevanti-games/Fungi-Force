@@ -8,9 +8,10 @@ namespace TeamShrimp.GGJ23
     {
         [SerializeField] private UnityEvent onGameStarted;
         [SerializeField] private UnityEvent onRoundStarted;
-        
+
         private Team currentTeam = Team.Red;
 
+        
         private void Start()
         {
             IEnumerator WaitAndStart()
@@ -20,6 +21,11 @@ namespace TeamShrimp.GGJ23
             }
 
             StartCoroutine(WaitAndStart());
+        }
+
+        public void OnPlayerAction()
+        {
+            EndRound();
         }
 
         private void StartGame()
@@ -36,6 +42,15 @@ namespace TeamShrimp.GGJ23
             Debug.Log($"Round started for {currentTeam}");
             onRoundStarted.Invoke();
         }
-        
+
+        private void EndRound()
+        {
+            SwitchTeam();
+        }
+
+        private void SwitchTeam()
+        {
+            currentTeam = currentTeam == Team.Red ? Team.Blue : Team.Red;
+        }
     }
 }
