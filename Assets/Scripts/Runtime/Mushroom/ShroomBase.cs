@@ -67,7 +67,6 @@ namespace TeamShrimp.GGJ23
         // Feel free to override this method for specific Shrooms
         public void Initialize()
         {
-            Debug.Log("I am initializing, my manager is " + MushroomManager.Instance);
             this._shroomId = MushroomManager.Instance.GenerateUniqueId();
             this.Children = new List<ShroomBase>();
             this.transform.position = new Vector3(_shroomPosition.x, _shroomPosition.y, 1);
@@ -78,8 +77,6 @@ namespace TeamShrimp.GGJ23
             {
                 _connector.SetPosition(1, new Vector3(ParentPosition.x, ParentPosition.y, 1));
             }
-            
-            Debug.Log("Initialized: " + ToString());
         }
 
         public abstract void Start();
