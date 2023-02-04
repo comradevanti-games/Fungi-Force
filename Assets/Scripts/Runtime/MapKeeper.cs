@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -21,6 +20,9 @@ namespace TeamShrimp.GGJ23
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
+        public List<ShroomBase> AllShrooms =>
+            new List<ShroomBase>(shroomsByPosition.Values);
+
         private void Awake()
         {
             LoadTileTypes();
@@ -29,11 +31,9 @@ namespace TeamShrimp.GGJ23
 
         private void Start()
         {
-            InstantiateMapWith(10);
+            InstantiateGameMap();
         }
 
-        public List<ShroomBase> AllShrooms => new List<ShroomBase>(shroomsByPosition.Values);
-        
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
@@ -48,9 +48,10 @@ namespace TeamShrimp.GGJ23
 
         public Vector2Int? GetClosestMapPoint(Vector3 worldPoint)
         {
-            Vector3Int min = Vector3Int.zero;
-            float minDist = float.MaxValue;
-            foreach (var vector3Int in groundTilemap.cellBounds.allPositionsWithin)
+            var min = Vector3Int.zero;
+            var minDist = float.MaxValue;
+            foreach (var vector3Int in groundTilemap.cellBounds
+                         .allPositionsWithin)
             {
                 float dist;
                 if ((dist = Vector3.Distance(worldPoint, vector3Int)) < minDist)
@@ -60,12 +61,14 @@ namespace TeamShrimp.GGJ23
                 }
             }
 
-            if (minDist < 2)
-            {
-                return new Vector2Int(min.x, min.y);
-            }
+            if (minDist < 2) return new Vector2Int(min.x, min.y);
 
             return null;
+        }
+
+        private void InstantiateGameMap()
+        {
+            InstantiateMapWith(Blackboard.Game.MapSize);
         }
 
         private void InstantiateMapWith(int size)
