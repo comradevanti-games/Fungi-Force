@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace TeamShrimp.GGJ23.Runtime.Util
 {
@@ -21,6 +23,17 @@ namespace TeamShrimp.GGJ23.Runtime.Util
                 Debug.LogError("the sum of cube vectors must always be zero!");
             }
             return new Vector3Int(x, y, z);
+        }
+
+        public static List<Vector3> AsVec3List(this List<Vector3Int> vector3Ints)
+        {
+            List<Vector3> vector3s = new List<Vector3>();
+            foreach (Vector3Int vector3Int in vector3Ints)
+            {
+                vector3s.Add(new Vector3(vector3Int.x, vector3Int.y, vector3Int.z));
+            }
+
+            return vector3s;
         }
     }
 }
