@@ -57,7 +57,9 @@ namespace TeamShrimp.GGJ23
         // Update is called once per frame
         void Update()
         {
-            Vector3 mousePosition = _activeCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = 11;
+            mousePosition = _activeCamera.ScreenToWorldPoint(mousePosition);
             if (Input.GetMouseButtonDown(0))
             {
                 if (_selectedShroom == null)
@@ -99,10 +101,10 @@ namespace TeamShrimp.GGJ23
                 Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
             // TODO Change to Map request
             RaycastHit2D hit = Physics2D.CircleCast(gridPosition, cellLength, Vector2.zero);
-            if (debug)
-                Debug.Log("Raycast Hit: " + hit.collider.tag);
             if (hit && hit.collider.CompareTag("Shroom"))
             {
+                if (debug)
+                    Debug.Log("Raycast Hit: " + hit.collider.tag);
                 return GetMushroomAtPosition(Vector2Int.CeilToInt(hit.point));
             }
 

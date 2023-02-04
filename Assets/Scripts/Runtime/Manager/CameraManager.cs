@@ -40,7 +40,12 @@ namespace TeamShrimp.GGJ23
                 MapSize = TESTING_MAP_SIZE;
             }
 
-            if (pointyTop)
+            if (MainCamera == null)
+            {
+                mainCamera = Camera.main;
+            }
+
+                if (pointyTop)
             {
                 this._mapWidth = (float)(MapSize * Math.Sqrt(3));
                 this._mapHeight = 2 * MapSize;
