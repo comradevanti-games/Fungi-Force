@@ -24,19 +24,24 @@ namespace TeamShrimp.GGJ23.Networking
 
         public void InitAsHost()
         {
-            InitFrom(Connection.AsHost(transferType));
+            connection = Opt.Some(Connection.AsHost(transferType));
         }
 
         public void InitAsGuest(string ip, ushort port)
         {
-            InitFrom(Connection.AsGuest(transferType, ip, port));
+            connection = Opt.Some(Connection.AsGuest(transferType, ip, port));
         }
 
-        // ReSharper disable once ParameterHidesMember
-        public void InitFrom(Connection connection)
+        public void InitFromBlackboard()
         {
-            this.connection = Opt.Some(connection);
+            connection = Blackboard.EstablishedConnection;
         }
+
+        public void CacheToBlackboard()
+        {
+            Blackboard.EstablishedConnection = connection;
+        }
+
 
         // ReSharper disable once ParameterHidesMember
         private void CheckForMessagesFrom(Connection connection)

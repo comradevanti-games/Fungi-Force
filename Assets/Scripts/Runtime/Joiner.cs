@@ -63,8 +63,9 @@ namespace TeamShrimp.GGJ23
             GoToGame();
         }
 
-        private static void GoToGame()
+        private void GoToGame()
         {
+            networkManager.CacheToBlackboard();
             SceneManager.LoadScene("Game");
         }
 
