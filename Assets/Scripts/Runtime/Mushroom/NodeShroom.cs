@@ -4,7 +4,7 @@
     {
         public override void Start()
         {
-            this.ShroomType = ShroomType.NODE;
+           
         }
 
         public override void Update()

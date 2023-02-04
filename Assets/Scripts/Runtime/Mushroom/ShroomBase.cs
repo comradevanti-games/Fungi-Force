@@ -8,11 +8,12 @@ namespace TeamShrimp.GGJ23
 {
     public abstract class ShroomBase : MonoBehaviour
     {
+
         private long _shroomId;
 
         private Vector2Int _shroomPosition;
 
-        private ShroomType _shroomType;
+     [SerializeField]   private ShroomType _shroomType;
         
         private ShroomBase _parent;
 
@@ -54,7 +55,7 @@ namespace TeamShrimp.GGJ23
             set => _connector = value;
         }
 
-        public bool IsOfType(ShroomType shroomType) => _shroomType == shroomType;
+        public bool IsOfType(ShroomType shroomType) => _shroomType.Id == shroomType.Id;
 
         public void ConnectChild(ShroomBase shroom)
         {

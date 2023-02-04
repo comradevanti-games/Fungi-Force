@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shroomType: {fileID: 11400000, guid: 5f198693e7a601b499cb79edb3bc95c9, type: 2}
 --- !u!120 &605877656211792814
 LineRenderer:
   serializedVersion: 2

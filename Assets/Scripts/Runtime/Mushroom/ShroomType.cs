@@ -1,9 +1,12 @@
-﻿namespace TeamShrimp.GGJ23
+﻿using UnityEngine;
+
+namespace TeamShrimp.GGJ23
 {
-    public enum ShroomType
+    [CreateAssetMenu(menuName = "GGJ23/Shroom-type")]
+    public class ShroomType : ScriptableObject
     {
-        HOME = 0,
-        NODE = 1,
-        VISION = 2,
+        [SerializeField] private int id;
+
+        public int Id => id;
     }
 }
