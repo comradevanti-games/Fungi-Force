@@ -6,10 +6,8 @@ namespace TeamShrimp.GGJ23
 {
     public static class Blackboard
     {
-        public static Game Game
-        {
-            get;
-            set;
-        }
+        public static Game Game { get; set; }
+        
+        public static bool IsHost { get; set; }
     }
 }
