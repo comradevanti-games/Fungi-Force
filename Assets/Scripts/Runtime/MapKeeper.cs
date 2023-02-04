@@ -31,6 +31,8 @@ namespace TeamShrimp.GGJ23
             InstantiateMapWith(10);
         }
 
+        public List<ShroomBase> AllShrooms => new List<ShroomBase>(shroomsByPosition.Values);
+        
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
@@ -41,7 +43,7 @@ namespace TeamShrimp.GGJ23
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
-            TryFindShroom(pos).IsSome();
+            TryFindShroom(pos).IsNone();
 
         private void InstantiateMapWith(int size)
         {
@@ -66,7 +68,11 @@ namespace TeamShrimp.GGJ23
                 var go = Instantiate(structure.Type.Prefab, pos.To3(),
                     Quaternion.identity);
                 go.TryGetComponent<ShroomBase>()
-                    .Iter(AddShroom);
+                    .Iter(shroom =>
+                    {
+                        shroom.ShroomPosition = pos;
+                        AddShroom(shroom);
+                    });
             }
         }
 

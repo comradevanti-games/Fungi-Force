@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ComradeVanti.CSharpTools;
 using Networking;
 using TeamShrimp.GGJ23.Runtime.Networking;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace TeamShrimp.GGJ23
         
         public static MushroomManager Instance;
 
-        private List<ShroomBase> _shroomsInGame;
+        // private List<ShroomBase> _shroomsInGame;
         
         private ShroomBase _selectedShroom;
 
@@ -27,6 +28,8 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private GhostShroom ghostShroom;
 
         [SerializeField] private float maxDistanceAllowed;
+        
+        [SerializeField] private MapKeeper map;
 
         public GameObject SelectedShroomPrefab
         {
@@ -39,15 +42,12 @@ namespace TeamShrimp.GGJ23
         void Start()
         {
             Instance = this;
-            GameObject[] existingShrooms = GameObject.FindGameObjectsWithTag("Shroom");
-            _shroomsInGame = new List<ShroomBase>();
+            List<ShroomBase> existingShrooms = map.AllShrooms;
             
-            foreach (GameObject shroom in existingShrooms)
+            foreach (ShroomBase shroom in existingShrooms)
             {
-                ShroomBase shroomBase = shroom.GetComponent<ShroomBase>();
-                shroomBase.ShroomPosition = Vector2Int.RoundToInt(shroomBase.transform.position);
-                shroomBase.Initialize();
-                _shroomsInGame.Add(shroomBase);
+                shroom.ShroomPosition = Vector2Int.FloorToInt(shroom.transform.position);
+                shroom.Initialize();
             }
             
             _selectedShroomPrefab = initialPrefab;
@@ -64,7 +64,7 @@ namespace TeamShrimp.GGJ23
             {
                 if (_selectedShroom == null)
                 {
-                    _selectedShroom = TryGetShroomAtPositon(Vector2Int.RoundToInt(mousePosition));
+                    _selectedShroom = TryGetShroomAtPositon(Vector2Int.FloorToInt(mousePosition));
                     if (debug)
                         Debug.Log("Found Shroom: " + _selectedShroom);
                 }
@@ -79,16 +79,16 @@ namespace TeamShrimp.GGJ23
 
                 if (ghostShroom.gameObject.activeSelf)
                 {
-                    ghostShroom.ShroomPosition = Vector2Int.RoundToInt(mousePosition);
+                    ghostShroom.ShroomPosition = Vector2Int.FloorToInt(mousePosition);
                 }
             }
             else if (Input.GetMouseButtonUp(0))
             {
                 if (_selectedShroom != null)
                 {
-                    ShroomBase toAdd = PlaceMushroom(Vector2Int.RoundToInt(mousePosition));
+                    ShroomBase toAdd = PlaceMushroom(Vector2Int.FloorToInt(mousePosition));
                     if (toAdd)
-                        _shroomsInGame.Add(toAdd);
+                        this.map.AddShroom(toAdd);
                     ghostShroom.gameObject.SetActive(false);
                     _selectedShroom = null; 
                 }
@@ -113,20 +113,25 @@ namespace TeamShrimp.GGJ23
 
         public long GenerateUniqueId()
         {
-            if (_shroomsInGame.Count == 0)
+            if (map.AllShrooms.Count == 0)
             {
                 return 1;
             }
 
-            return _shroomsInGame.Max(shroom => shroom.ShroomId) + 1;
+            return map.AllShrooms.Max(shroom => shroom.ShroomId) + 1;
         }
 
         public ShroomBase PlaceMushroom(Vector2Int gridPosition)
         {
-            if (_selectedShroom == null || !PositionsInRange(_selectedShroom.ShroomPosition, gridPosition) || TryGetShroomAtPositon(gridPosition) != null)
+            if (debug)
+                Debug.Log("Placing Shroom at: " + gridPosition + ", selected Shroom is: " + _selectedShroom);
+            if (_selectedShroom == null || !PositionsInRange(_selectedShroom.ShroomPosition, gridPosition)
+                || !map.CanPlace(_selectedShroomPrefab.GetComponent<ShroomBase>().ShroomType, gridPosition))
             {
                 return null;
             }
+            if (debug)
+                Debug.Log("Is free");
             ShroomBase placedShroom = Instantiate(_selectedShroomPrefab).GetComponent<ShroomBase>();
             placedShroom.ShroomPosition = gridPosition;
 
@@ -149,7 +154,9 @@ namespace TeamShrimp.GGJ23
 
         public ShroomBase GetMushroomAtPosition(Vector2Int gridPosition)
         {
-            return _shroomsInGame.Find(shroom => shroom.ShroomPosition.Equals(gridPosition));
+            ShroomBase result = null;
+            map.TryFindShroom(gridPosition).Iter(shroom => result = shroom);
+            return result;
         }
 
         public bool ShroomsInRange(ShroomBase shroomOne, ShroomBase shroomTwo)
