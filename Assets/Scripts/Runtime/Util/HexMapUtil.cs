@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using System;
 using UnityEngine;
 
 namespace TeamShrimp.GGJ23.Runtime.Util
@@ -23,6 +24,12 @@ namespace TeamShrimp.GGJ23.Runtime.Util
                 Debug.LogError("the sum of cube vectors must always be zero!");
             }
             return new Vector3Int(x, y, z);
+        }
+
+        public static int CubeDistance(this Vector3Int self, Vector3Int other)
+        {
+            var vec = self-other;
+            return Math.Max(Math.Max(Math.Abs(vec.x), Math.Abs(vec.y)), Math.Abs(vec.z));
         }
 
         public static List<Vector3> AsVec3List(this List<Vector3Int> vector3Ints)
