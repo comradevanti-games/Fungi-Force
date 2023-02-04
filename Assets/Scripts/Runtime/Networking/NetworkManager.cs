@@ -24,9 +24,9 @@ namespace TeamShrimp.GGJ23.Networking
             connection.Iter(CheckForMessagesFrom);
         }
 
-        public void InitAsHost()
+        public void InitAsHost(ushort port)
         {
-            connection = Opt.Some(Connection.AsHost(transferType));
+            connection = Opt.Some(Connection.AsHost(transferType, port));
         }
 
         public void InitAsGuest(string ip, ushort port)

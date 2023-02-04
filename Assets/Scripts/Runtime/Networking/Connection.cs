@@ -34,10 +34,11 @@ namespace TeamShrimp.GGJ23.Networking
             transfer.Send(command, channelId);
         }
 
-        public static Connection AsHost(ITransferLayer.Type type)
+        public static Connection AsHost(ITransferLayer.Type type, ushort port)
         {
             var transfer = MakeTransfer(type);
 
+            transfer.SetConnectionInfo("No ip, im host", port);
             transfer.SetServer(true);
             transfer.CreateServer();
 

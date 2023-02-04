@@ -11,7 +11,7 @@ namespace TeamShrimp.GGJ23.Networking
         public void Start()
         {
             if (isServer)
-                GetComponent<NetworkManager>().InitAsHost();
+                GetComponent<NetworkManager>().InitAsHost(port);
             else
                 GetComponent<NetworkManager>().InitAsGuest(ip, port);
         }

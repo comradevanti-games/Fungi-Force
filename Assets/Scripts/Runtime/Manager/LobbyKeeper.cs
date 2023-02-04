@@ -16,7 +16,7 @@ namespace TeamShrimp.GGJ23
 
         private void OnEnable()
         {
-            networkManager.InitAsHost();
+            networkManager.InitAsHost(808);
             ReadInput();
         }
 
