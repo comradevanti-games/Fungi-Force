@@ -51,7 +51,7 @@ namespace TeamShrimp.GGJ23.Networking
                     transferLayer = new ENetTransfer();
                     break;
             }
-
+            if(debug) Debug.Log("INIT CALLED WITH " + ip + ":" + port);
             transferLayer.SetConnectionInfo(ip, port);
             transferLayer.SetServer(isServer);
 
@@ -62,24 +62,7 @@ namespace TeamShrimp.GGJ23.Networking
 
             isInitialized = true;
         }
-
-
-        private void CreateClient()
-        {
-            Library.Initialize();
-            // CREATING CLIENT
-            host = new Host();
-            var address = new Address();
-            address.SetHost(ip);
-            address.Port = port;
-
-            host.Create();
-            if (debug) Debug.Log("CONNECTING TO " + ip + ":" + port);
-            otherClient = host.Connect(address);
-            if (debug) Debug.Log("CONNECTION ESTABLISHED");
-        }
-
-
+        
         private void ManageIncomingPacket(byte[] incoming)
         {
             _incomingCommandHandler.HandleCommand(incoming);

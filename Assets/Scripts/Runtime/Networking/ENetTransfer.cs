@@ -14,7 +14,7 @@ namespace TeamShrimp.GGJ23.Networking
         public string ip;
         public ushort port;
 
-        public bool debug;
+        public bool debug = true;
         private int reconnectAttempts = 0;
 
         public void SetServer(bool isServer)
@@ -146,6 +146,7 @@ namespace TeamShrimp.GGJ23.Networking
             p.Create(baseCommand.Buffer);
             otherClient.Send(channelId, ref p);
             p.Dispose();
+            host.Flush();
         }
 
     }

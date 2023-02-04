@@ -32,7 +32,7 @@ namespace TeamShrimp.GGJ23.Networking
         
         public override void SerializeCommand()
         {
-            PackageWrapper pw = new PackageWrapper(COMMAND_LENGTH, (byte)CommandType.CUT);
+            PackageWrapper pw = new PackageWrapper(COMMAND_LENGTH, (byte)CommandType.WORLD_INIT);
             pw.Write(size);
             pw.Write(seed);
             Buffer = pw.Buffer;
