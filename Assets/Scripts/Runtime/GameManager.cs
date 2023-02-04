@@ -63,11 +63,13 @@ namespace TeamShrimp.GGJ23
 
         private void EndRound()
         {
+            Debug.Log($"Round ended for{currentTeam}");
             SwitchTeam();
         }
 
         private void SwitchTeam()
         {
+            Debug.Log("Switched team");
             currentTeam = currentTeam == Team.Red ? Team.Blue : Team.Red;
         }
     }
