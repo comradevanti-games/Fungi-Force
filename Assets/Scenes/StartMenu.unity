@@ -1854,10 +1854,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TeamShrimp.GGJ23.ButtonFunctions, TeamShrimp.GGJ23
-        m_MethodName: SetHost
-        m_Mode: 6
+      - m_Target: {fileID: 1717085318}
+        m_TargetAssemblyTypeName: TeamShrimp.GGJ23.Joiner, TeamShrimp.GGJ23
+        m_MethodName: OnJoinPressed
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2259,6 +2259,8 @@ GameObject:
   m_Component:
   - component: {fileID: 635844138}
   - component: {fileID: 635844137}
+  - component: {fileID: 635844140}
+  - component: {fileID: 635844139}
   m_Layer: 0
   m_Name: Global
   m_TagString: Untagged
@@ -2293,6 +2295,81 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &635844139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635844136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e69bdb40984c91b55f3e256aedbf21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+  port: 808
+  isServer: 1
+  ip: 127.0.0.1
+  networkingBackend: 0
+--- !u!114 &635844140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635844136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 037f3a158c4a459698548befcbb853a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+  subscribedNetworkCommands:
+  - ct: 247
+    subscribers:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1197012277}
+          m_TargetAssemblyTypeName: TeamShrimp.GGJ23.LobbyKeeper, TeamShrimp.GGJ23
+          m_MethodName: OnConnectCommand
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+        - m_Target: {fileID: 1717085318}
+          m_TargetAssemblyTypeName: TeamShrimp.GGJ23.Joiner, TeamShrimp.GGJ23
+          m_MethodName: OnConnectedCmd
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+  - ct: 248
+    subscribers:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1717085318}
+          m_TargetAssemblyTypeName: TeamShrimp.GGJ23.Joiner, TeamShrimp.GGJ23
+          m_MethodName: OnWorldInitCmd
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!1 &666124131
 GameObject:
   m_ObjectHideFlags: 0
@@ -4732,6 +4809,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1197012275}
   - component: {fileID: 1197012276}
+  - component: {fileID: 1197012277}
   m_Layer: 0
   m_Name: Lobby
   m_TagString: Untagged
@@ -4787,6 +4865,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1197012277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197012274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b66e478419b724b91b0e774a9e7e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkManager: {fileID: 635844139}
+  mapSizeInput: {fileID: 1604977081}
+  mapSeedInput: {fileID: 994456091}
+  hostNameInput: {fileID: 717281773}
 --- !u!1 &1272579853
 GameObject:
   m_ObjectHideFlags: 0
@@ -6929,6 +7023,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1717085316}
   - component: {fileID: 1717085317}
+  - component: {fileID: 1717085318}
   m_Layer: 0
   m_Name: Join
   m_TagString: Untagged
@@ -6986,6 +7081,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1717085318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717085315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301074feb13bf8948bedc2bbb700fa45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkManager: {fileID: 635844139}
+  ipInput: {fileID: 1942465211}
+  nameInput: {fileID: 1272579855}
 --- !u!1 &1723632938
 GameObject:
   m_ObjectHideFlags: 0

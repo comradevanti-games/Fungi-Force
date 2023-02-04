@@ -6,7 +6,7 @@ namespace TeamShrimp.GGJ23.Networking
 {
     public class ConnectionInitCommand : BaseCommand
     {
-        private string playerName;
+        public string playerName;
 
         public ConnectionInitCommand(string playerName)
         {
