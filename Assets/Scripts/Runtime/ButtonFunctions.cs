@@ -14,5 +14,10 @@ namespace TeamShrimp.GGJ23
             Application.Quit();
 #endif
         }
+
+        public void SetHost(bool isHost)
+        {
+            Blackboard.IsHost = isHost;
+        }
     }
 }
