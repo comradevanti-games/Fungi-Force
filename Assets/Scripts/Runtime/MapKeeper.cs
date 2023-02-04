@@ -43,6 +43,17 @@ namespace TeamShrimp.GGJ23
             InstantiateGameMap();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetMouseButtonUp(2))
+            {
+                Debug.Log("Strategic View");
+                Color color = groundTilemap.color;
+                color.a = color.a < 1 ? 1 : 0.25f;
+                groundTilemap.color = color;
+            }
+        }
+
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
