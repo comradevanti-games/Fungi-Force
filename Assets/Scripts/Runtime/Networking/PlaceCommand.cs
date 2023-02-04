@@ -8,14 +8,14 @@ namespace Networking
     // LAYOUT: [0, mushType, long id, vec2int pos, vec2int sourcePos]
     public class PlaceCommand : BaseCommand
     {
-        public byte mushType;
+        public string mushType;
         public long id;
         public Vector2Int pos;
         public Vector2Int sourcePos;
         
         public static int COMMAND_LENGTH = 25;
 
-        public PlaceCommand(byte mushType, long id, Vector2Int pos, Vector2Int sourcePos)
+        public PlaceCommand(string mushType, long id, Vector2Int pos, Vector2Int sourcePos)
         {
             this.mushType = mushType;
             this.id = id;
@@ -35,7 +35,7 @@ namespace Networking
         
         public override void SerializeCommand()
         {
-            PackageWrapper pw = new PackageWrapper(COMMAND_LENGTH, (byte)CommandType.PLACE);
+            PackageWrapper pw = new PackageWrapper(COMMAND_LENGTH + mushType.Length, (byte)CommandType.PLACE);
             pw.Write(mushType);
             pw.Write(id);
             pw.Write(pos);
@@ -46,7 +46,7 @@ namespace Networking
 
         public override void DeserializeCommand(BinaryReader binaryReader)
         {
-            mushType = binaryReader.ReadByte();
+            mushType = binaryReader.ReadString();
             id = binaryReader.ReadBytes(8).DeserializeLong();
             pos = binaryReader.ReadVector2Int();
             sourcePos = binaryReader.ReadVector2Int();

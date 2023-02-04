@@ -55,7 +55,7 @@ namespace TeamShrimp.GGJ23
             set => _connector = value;
         }
 
-        public bool IsOfType(ShroomType shroomType) => _shroomType.Id == shroomType.Id;
+        public bool IsOfType(ShroomType shroomType) => _shroomType.name == shroomType.name;
 
         public void ConnectChild(ShroomBase shroom)
         {

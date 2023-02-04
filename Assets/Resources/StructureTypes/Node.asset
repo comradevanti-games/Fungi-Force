@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85f416c3ad6148c5b4bced5a9894ec6c, type: 3}
-  m_Name: Vision
+  m_Script: {fileID: 11500000, guid: 4fdd89fcf7440c3428558c48ee742780, type: 3}
+  m_Name: Node
   m_EditorClassIdentifier: 
-  id: 2
+  prefab: {fileID: 3888803409615587763, guid: 8981e03bd711bf64591eeedb5f2ae862, type: 3}

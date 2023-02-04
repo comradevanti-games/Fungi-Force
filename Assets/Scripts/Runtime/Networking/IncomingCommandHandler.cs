@@ -8,6 +8,7 @@ namespace Networking
 {
     public class IncomingCommandHandler : MonoBehaviour
     {
+        public bool debug;
         public delegate BaseCommand CommandHandlerMapping(BinaryReader br);
 
         private Dictionary<CommandType, CommandHandlerMapping> handler = new Dictionary<CommandType, CommandHandlerMapping>();
@@ -18,9 +19,17 @@ namespace Networking
         
         public void Start()
         {
-            Register(CommandType.READY, HandleCommandType<ReadyCommand>);
-            Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);
-            Register(CommandType.CUT, HandleCommandType<CutCommand>);
+            handler = new Dictionary<CommandType, CommandHandlerMapping>()
+            {
+                {CommandType.READY, HandleCommandType<ReadyCommand>},
+                {CommandType.PLACE, HandleCommandType<PlaceCommand>},
+                {CommandType.CUT, HandleCommandType<CutCommand>},
+                {CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>}
+            };
+            // Register(CommandType.READY, HandleCommandType<ReadyCommand>);
+            // Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);
+            // Register(CommandType.CUT, HandleCommandType<CutCommand>);
+            // Register(CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>);
             SubscriptionsToDict();
         }
 
@@ -40,14 +49,7 @@ namespace Networking
             foreach (var subscribedCommand in subscribedNetworkCommands)
             {
                 subscribers[subscribedCommand.ct] = subscribedCommand.subscribers;
-            }
-            
-            
-            Debug.Log("SUBSCRIBERS: ");
-            foreach (var VARIABLE in subscribers)
-            {
-                Debug.Log(VARIABLE);
-            }
+            } 
         }
         
         public void HandleCommand(byte[] incoming)
@@ -80,7 +82,7 @@ namespace Networking
                 Debug.LogError("RECEIVED EVENT, BUT NO SUBSCRIBERS FOR EVENT TYPE " + type);
                 return;
             }
-            Debug.Log("RUNNING SUBSCRIBER for event " + bc);
+            if(debug) Debug.Log("RUNNING SUBSCRIBER for event " + bc);
             subscribers[type].Invoke(bc);
         }
 
