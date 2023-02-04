@@ -16,19 +16,17 @@ namespace TeamShrimp.GGJ23
 
         private string Ip => ipInput.text.Split(":")[0];
 
-        private int Port => int.Parse(ipInput.text.Split(":")[1]);
+        private ushort Port => ushort.Parse(ipInput.text.Split(":")[1]);
 
         private string GuestName => nameInput.text;
 
-
-        private void OnEnable()
-        {
-            networkManager.Init(false);
-        }
         
 
         public void OnJoinPressed()
         {
+            networkManager.ip = Ip;
+            networkManager.port = Port;
+            networkManager.Init(false);
             SendConnectCommand();
         }
 
