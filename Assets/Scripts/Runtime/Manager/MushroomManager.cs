@@ -13,7 +13,7 @@ namespace TeamShrimp.GGJ23
         public static MushroomManager Instance;
 
         private List<ShroomBase> _shroomsInGame;
-
+        
         private ShroomBase _selectedShroom;
 
         private GameObject _selectedShroomPrefab;

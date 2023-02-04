@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1160280945074648279}
   - component: {fileID: 7183072269508939756}
+  - component: {fileID: 938238293}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -48,3 +49,17 @@ MonoBehaviour:
   initialPrefab: {fileID: 3888803409615587763, guid: 8981e03bd711bf64591eeedb5f2ae862, type: 3}
   ghostShroom: {fileID: 0}
   maxDistanceAllowed: 5
+--- !u!114 &938238293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6750856453333890295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d39951911e505f4b88751f6dc1984d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  cameraSmoothing: 0.01
