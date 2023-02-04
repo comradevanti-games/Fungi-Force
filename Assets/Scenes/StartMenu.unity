@@ -7095,7 +7095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   subscribedNetworkCommands:
-  - ct: 127
+  - ct: 247
     subscribers:
       m_PersistentCalls:
         m_Calls:
@@ -7111,6 +7111,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+  - ct: 248
+    subscribers:
+      m_PersistentCalls:
+        m_Calls:
         - m_Target: {fileID: 1717085318}
           m_TargetAssemblyTypeName: TeamShrimp.GGJ23.Joiner, TeamShrimp.GGJ23
           m_MethodName: OnWorldInitCmd
