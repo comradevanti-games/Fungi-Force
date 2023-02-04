@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
 using Dev.ComradeVanti;
+using TeamShrimp.GGJ23.Runtime.Util;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -47,7 +48,7 @@ namespace TeamShrimp.GGJ23
         {
             if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetMouseButtonUp(2))
             {
-                Debug.Log("Strategic View");
+                // --Debug.Log("Strategic View");
                 Color color = groundTilemap.color;
                 color.a = color.a < 1 ? 1 : 0.25f;
                 groundTilemap.color = color;
@@ -92,6 +93,26 @@ namespace TeamShrimp.GGJ23
         public StructureType GetStructureType(String name)
         {
             return this.structureTypesByName[name];
+        }
+
+        public List<Vector3Int> GetLerpPathCubed(Vector3Int startPosition, Vector3Int endPosition)
+        {
+            Vector3Int startCube = startPosition.OffsetToCube();
+            Vector3Int endCube = endPosition.OffsetToCube();
+            int cubeDistance = startCube.CubeDistance(endCube);
+            List<Vector3Int> results = new List<Vector3Int>();
+
+            for (int i = 0; i <= cubeDistance; i++)
+            {
+                float x = Mathf.Lerp(startCube.x, endCube.x, 1.0f / cubeDistance * i);
+                float y = Mathf.Lerp(startCube.y, endCube.y, 1.0f / cubeDistance * i);
+                float z = Mathf.Lerp(startCube.z, endCube.z, 1.0f / cubeDistance * i);
+
+                Vector3Int cube = new Vector3(x, y, z).CubeRound();
+                results.Add(cube);
+            }
+
+            return results;
         }
 
         private void InstantiateGameMap()

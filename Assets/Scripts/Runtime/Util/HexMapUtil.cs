@@ -9,16 +9,16 @@ namespace TeamShrimp.GGJ23.Runtime.Util
     {
         public static Vector3Int CubeToOffset(this Vector3Int cube)
         {
-            var col = cube.x + (cube.z - (cube.z & 1)) / 2;
-            var row = cube.z;
+            var col = cube.x + (cube.y - (cube.y & 1)) / 2;
+            var row = cube.y;
             return new Vector3Int(col, row, 0);
         }
 
         public static Vector3Int OffsetToCube(this Vector3Int offset)
         {
             var x = offset.x - (offset.y - (offset.y & 1)) / 2;
-            var z = offset.y;
-            var y = -x - z;
+            var y = offset.y;
+            var z = -x - y;
             if (x + y + z != 0)
             {
                 Debug.LogError("the sum of cube vectors must always be zero!");
@@ -30,6 +30,32 @@ namespace TeamShrimp.GGJ23.Runtime.Util
         {
             var vec = self-other;
             return Math.Max(Math.Max(Math.Abs(vec.x), Math.Abs(vec.y)), Math.Abs(vec.z));
+        }
+
+        public static Vector3Int CubeRound(this Vector3 fCube)
+        {
+            var x = (int) Math.Round(fCube.x, 0);
+            var y = (int) Math.Round(fCube.y, 0);
+            var z = (int) Math.Round(fCube.z, 0);
+
+            var xDiff = Math.Abs(x - fCube.x);
+            var yDiff = Math.Abs(y - fCube.y);
+            var zDiff = Math.Abs(z - fCube.z);
+
+            if (xDiff > yDiff && xDiff > zDiff)
+            {
+                x = -y - z;
+            }
+            else if (yDiff > zDiff)
+            {
+                y = -x - z;
+            }
+            else
+            {
+                z = -x - y;
+            }
+
+            return new Vector3Int(x, y, z);
         }
 
         public static List<Vector3> AsVec3List(this List<Vector3Int> vector3Ints)

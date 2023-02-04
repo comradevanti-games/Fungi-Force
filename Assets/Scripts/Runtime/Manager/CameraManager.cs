@@ -67,8 +67,8 @@ namespace TeamShrimp.GGJ23
 
             if (Math.Abs(horizontalMovement) + Math.Abs(verticalMovement) > 0)
             {
-                MainCamera.transform.position += MainCamera.transform.right * (horizontalMovement * cameraSmoothing) +
-                                                 MainCamera.transform.up * (verticalMovement * cameraSmoothing);
+                MainCamera.transform.position += MainCamera.transform.right * (horizontalMovement * cameraSmoothing * Time.deltaTime) +
+                                                 MainCamera.transform.up * (verticalMovement * cameraSmoothing * Time.deltaTime);
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -85,8 +85,8 @@ namespace TeamShrimp.GGJ23
 
                 if (Math.Abs(this._mouseChangeX) + Math.Abs(this._mouseChangeY) > 0)
                 {
-                    MainCamera.transform.position += MainCamera.transform.right * (this._mouseChangeX * cameraSmoothing) +
-                                                     MainCamera.transform.up * (this._mouseChangeY * cameraSmoothing);
+                    MainCamera.transform.position += MainCamera.transform.right * (this._mouseChangeX * cameraSmoothing * Time.deltaTime) +
+                                                     MainCamera.transform.up * (this._mouseChangeY * cameraSmoothing * Time.deltaTime);
                 }
             }
             else if (Input.GetMouseButtonUp(1))

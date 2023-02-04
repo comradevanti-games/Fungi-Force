@@ -22,6 +22,8 @@ namespace TeamShrimp.GGJ23
 
         private Camera _activeCamera;
 
+        private List<ShroomConnection> _shroomConnections = new List<ShroomConnection>();
+
         [SerializeField] private float cellLength;
 
         [SerializeField] private GameObject initialPrefab;
@@ -33,6 +35,8 @@ namespace TeamShrimp.GGJ23
         
         [SerializeField] private MapKeeper map;
         [SerializeField] private UnityEvent onShroomPlaced;
+
+        [SerializeField] private ShroomConnection connectionPrefab;
 
         public GameObject SelectedShroomPrefab
         {
@@ -151,7 +155,10 @@ namespace TeamShrimp.GGJ23
 
             if (_selectedShroom != null)
             {
-                _selectedShroom.ConnectChild(placedShroom);
+                // _selectedShroom.ConnectChild(placedShroom);
+                ShroomConnection connection = Instantiate(connectionPrefab);
+                connection.Initialize(placedShroom, _selectedShroom, map);
+                _shroomConnections.Add(connection);
             }
             
             placedShroom.Initialize();
@@ -184,7 +191,7 @@ namespace TeamShrimp.GGJ23
         public bool PositionsInRange(Vector2Int posOne, Vector2Int posTwo)
         {
             float dist = posOne.CellDistance(posTwo);
-            Debug.Log("Distance from Parent: " + dist);
+            // Debug.Log("Distance from Parent: " + dist);
             return dist <= maxDistanceAllowed;
         }
 
