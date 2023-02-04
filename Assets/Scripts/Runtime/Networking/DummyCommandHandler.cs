@@ -6,7 +6,7 @@ namespace TeamShrimp.GGJ23.Networking
     {
         public void DebugLogCommand(BaseCommand baseCommand)
         {
-            Debug.Log(baseCommand);
+            Debug.Log("dummy command handler received command: " + baseCommand);
         }
     }
 }

@@ -10,6 +10,13 @@
         public void StopNetworkConnection();
 
         public void Send(BaseCommand baseCommand, byte channelId = 0);
+        
+        public enum Type
+        {
+            ENET,
+            DUMMY_TRANSFER
+        }
+
 
     }
 }

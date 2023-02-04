@@ -13,6 +13,9 @@ namespace TeamShrimp.GGJ23.Networking
         WORLD_INIT = 248, // LAYOUT: [248, int side_length, long seed] - WorldInitCommand
         CONNECT = 247, // LAYOUT: [247, namelength, ... name ...] - ConnectCommand
         
+        
+        ALL = 127, // APP INTERNAL, SUBSCRIBING TO THIS SUBSCRIBES TO ALL COMMANDS
+        
         // Gameplay
         PLACE = 32, // LAYOUT: [0, mushtype length, ... mushtype ..., int id, vec2int pos, vec2int sourcePos] - PlaceCommand
         CUT = 1, // LAYOUT: [1, vec2int sourcePos, vec2int targetPos] - CutCommand

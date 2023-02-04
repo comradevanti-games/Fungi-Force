@@ -66,25 +66,32 @@ namespace TeamShrimp.GGJ23.Networking
                 return;
             }
 
+            
+            
             if (!handler.ContainsKey(type))
                 Debug.LogError("MISSING PACKET HANDLER FOR PACKET TYPE " + type);
 
-            BinaryReader br = new BinaryReader(new MemoryStream(incoming));
+            var br = new BinaryReader(new MemoryStream(incoming));
             br.ReadByte();
-            BaseCommand bc = handler[type].Invoke(br);
+            var bc = handler[type].Invoke(br);
             if (!bc.ValidPackage)
             {
                 Debug.LogError("PACKAGE OF TYPE " + type + " HAS A PROBLEM: " + bc.deserializeException);
                 return;
             }
-
-            if (!subscribers.ContainsKey(type))
-            {
-                Debug.LogError("RECEIVED EVENT, BUT NO SUBSCRIBERS FOR EVENT TYPE " + type);
-                return;
-            }
+            if(!subscribers.ContainsKey(CommandType.ALL))
+                if (!subscribers.ContainsKey(type))
+                {
+                    Debug.LogError("RECEIVED EVENT, BUT NO SUBSCRIBERS FOR EVENT TYPE " + type);
+                    return;
+                }
             if(debug) Debug.Log("RUNNING SUBSCRIBER for event " + bc);
-            subscribers[type].Invoke(bc);
+            if(subscribers.ContainsKey(type))
+                subscribers[type].Invoke(bc);
+            if (subscribers.ContainsKey(CommandType.ALL))
+            {
+                subscribers[CommandType.ALL].Invoke(bc);
+            }
         }
 
         public BaseCommand HandleCommandType<T>(BinaryReader br) where T : BaseCommand

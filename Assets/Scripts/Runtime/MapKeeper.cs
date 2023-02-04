@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -21,6 +20,9 @@ namespace TeamShrimp.GGJ23
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
+        public List<ShroomBase> AllShrooms =>
+            new List<ShroomBase>(shroomsByPosition.Values);
+
         [SerializeField] private bool debug;
 
         private void Awake()
@@ -37,12 +39,9 @@ namespace TeamShrimp.GGJ23
 
         private void Start()
         {
-            if (debug) return;
-            InstantiateMapWith(10);
+            InstantiateGameMap();
         }
 
-        public List<ShroomBase> AllShrooms => new List<ShroomBase>(shroomsByPosition.Values);
-        
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
@@ -76,6 +75,11 @@ namespace TeamShrimp.GGJ23
         {
             Vector3Int pos = new Vector3Int(gridPos.x, gridPos.y, (int) groundTilemap.transform.position.z);
             return GridToWorldPos(pos);
+        }
+
+        private void InstantiateGameMap()
+        {
+            InstantiateMapWith(Blackboard.Game.MapSize);
         }
 
         private void InstantiateMapWith(int size)
