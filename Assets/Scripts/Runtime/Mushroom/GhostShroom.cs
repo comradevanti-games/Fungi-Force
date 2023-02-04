@@ -17,8 +17,8 @@ namespace TeamShrimp.GGJ23
 
         public override void Update()
         {
-            transform.position = new Vector3(ShroomPosition.x, ShroomPosition.y, 1);
-            Connector.SetPosition(0, new Vector3(ParentPosition.x, ParentPosition.y, 1));
+            transform.position = WorldPosition;
+            Connector.SetPosition(0, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
             Connector.SetPosition(1, transform.position);
 
             Color tint = MushroomManager.Instance.PositionsInRange(ShroomPosition, ParentPosition)

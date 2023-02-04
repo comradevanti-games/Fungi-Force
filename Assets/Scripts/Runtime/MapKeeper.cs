@@ -21,14 +21,23 @@ namespace TeamShrimp.GGJ23
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
+        [SerializeField] private bool debug;
+
         private void Awake()
         {
+            if (debug)
+            {
+                ShroomBase shroom = GameObject.FindWithTag("Shroom").GetComponent<ShroomBase>();
+                shroomsByPosition.Add(shroom.ShroomPosition, shroom);
+                return;
+            }
             LoadTileTypes();
             LoadStructureTypes();
         }
 
         private void Start()
         {
+            if (debug) return;
             InstantiateMapWith(10);
         }
 
@@ -46,26 +55,27 @@ namespace TeamShrimp.GGJ23
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
             TryFindShroom(pos).IsNone();
 
-        public Vector2Int? GetClosestMapPoint(Vector3 worldPoint)
+        public Vector3 SnapToGridPos(Vector3 worldPos)
         {
-            Vector3Int min = Vector3Int.zero;
-            float minDist = float.MaxValue;
-            foreach (var vector3Int in groundTilemap.cellBounds.allPositionsWithin)
-            {
-                float dist;
-                if ((dist = Vector3.Distance(worldPoint, vector3Int)) < minDist)
-                {
-                    min = vector3Int;
-                    minDist = dist;
-                }
-            }
+            Vector3Int cell = groundTilemap.WorldToCell(worldPos);
+            cell.z = 1;
+            return groundTilemap.CellToWorld(cell);
+        }
 
-            if (minDist < 2)
-            {
-                return new Vector2Int(min.x, min.y);
-            }
+        public Vector3Int WorldToGridPos(Vector3 worldPos)
+        {
+            return groundTilemap.WorldToCell(worldPos);
+        }
 
-            return null;
+        public Vector3 GridToWorldPos(Vector3Int gridPos)
+        {
+            return groundTilemap.CellToWorld(gridPos);
+        }
+
+        public Vector3 GridToWorldPos(Vector2Int gridPos)
+        {
+            Vector3Int pos = new Vector3Int(gridPos.x, gridPos.y, (int) groundTilemap.transform.position.z);
+            return GridToWorldPos(pos);
         }
 
         private void InstantiateMapWith(int size)
@@ -93,7 +103,7 @@ namespace TeamShrimp.GGJ23
                 go.TryGetComponent<ShroomBase>()
                     .Iter(shroom =>
                     {
-                        shroom.ShroomPosition = pos;
+                        shroom.WorldPosition = pos.To3();
                         AddShroom(shroom);
                     });
             }

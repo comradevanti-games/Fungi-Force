@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -37,6 +38,11 @@ namespace TeamShrimp.GGJ23
 
         private MushroomManager() { }
 
+        void Awake()
+        {
+            Instance = this;
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -45,7 +51,6 @@ namespace TeamShrimp.GGJ23
             
             foreach (ShroomBase shroom in existingShrooms)
             {
-                shroom.ShroomPosition = Vector2Int.FloorToInt(shroom.transform.position);
                 shroom.Initialize();
             }
             
@@ -57,15 +62,14 @@ namespace TeamShrimp.GGJ23
         void Update()
         {
             Vector3 mousePosition = Input.mousePosition;
-            mousePosition.z = 11;
-            mousePosition = _activeCamera.ScreenToWorldPoint(mousePosition);
+            // mousePosition.z = Mathf.Abs(CameraManager.Instance.MainCamera.transform.position.z) + 1;
+            mousePosition = CameraManager.Instance.MainCamera.ScreenToWorldPoint(mousePosition);
             if (Input.GetMouseButtonDown(0))
             {
                 if (_selectedShroom == null)
                 {
-                    Vector2Int? gridPosition = map.GetClosestMapPoint(mousePosition);
-                    if (gridPosition.HasValue)
-                        _selectedShroom = GetMushroomAtPosition(gridPosition.Value);
+                    Vector3Int gridPosition = map.WorldToGridPos(mousePosition);
+                    _selectedShroom = GetMushroomAtPosition((Vector2Int) gridPosition);
                     if (debug)
                         Debug.Log("Found Shroom: " + _selectedShroom);
                 }
@@ -80,18 +84,17 @@ namespace TeamShrimp.GGJ23
 
                 if (ghostShroom.gameObject.activeSelf)
                 {
-                    Vector2Int? gridPosition = map.GetClosestMapPoint(mousePosition);
-                    ghostShroom.ShroomPosition = gridPosition.HasValue ? gridPosition.Value : Vector2Int.FloorToInt(mousePosition);
+                    Vector3 gridPosition = map.SnapToGridPos(mousePosition);
+                    ghostShroom.WorldPosition = gridPosition;
                 }
             }
             else if (Input.GetMouseButtonUp(0))
             {
                 if (_selectedShroom != null)
                 {
-                    Vector2Int? gridPosition = map.GetClosestMapPoint(mousePosition);
+                    Vector3Int gridPosition = map.WorldToGridPos(mousePosition);
                     ShroomBase toAdd = null;
-                    if (gridPosition.HasValue)
-                        toAdd = PlaceMushroom(gridPosition.Value);
+                    toAdd = PlaceMushroom((Vector2Int) gridPosition);
                     if (toAdd)
                         this.map.AddShroom(toAdd);
                     ghostShroom.gameObject.SetActive(false);
@@ -138,7 +141,9 @@ namespace TeamShrimp.GGJ23
             if (debug)
                 Debug.Log("Is free");
             ShroomBase placedShroom = Instantiate(_selectedShroomPrefab).GetComponent<ShroomBase>();
-            placedShroom.ShroomPosition = gridPosition;
+            placedShroom.WorldPosition = map.GridToWorldPos(gridPosition);
+            
+            Debug.Log(placedShroom);
 
             if (_selectedShroom != null)
             {
@@ -147,11 +152,11 @@ namespace TeamShrimp.GGJ23
             
             placedShroom.Initialize();
 
-            PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
-            NetworkManager.client.SendCommand(placeCommand);
+            //PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
+            //NetworkManager.client.SendCommand(placeCommand);
             if (debug)
             {
-                Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);
+                //Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);
                 Debug.Log("BYTE TO BIT STRING: " + 0b101);
             }
             return placedShroom;
@@ -174,6 +179,16 @@ namespace TeamShrimp.GGJ23
         public bool PositionsInRange(Vector2Int posOne, Vector2Int posTwo)
         {
             return Vector2Int.Distance(posOne, posTwo) <= maxDistanceAllowed;
+        }
+
+        public Vector3Int GetCellPositionForMush(Vector3 worldPos)
+        {
+            return map.WorldToGridPos(worldPos);
+        }
+
+        public Vector3 GetWorldPositionForShroomPosition(Vector2Int shroomPosition)
+        {
+            return map.GridToWorldPos(shroomPosition);
         }
     }
 }

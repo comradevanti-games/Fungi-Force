@@ -11,7 +11,7 @@ namespace TeamShrimp.GGJ23
 
         private long _shroomId;
 
-        private Vector2Int _shroomPosition;
+        // private Vector2Int _shroomPosition;
 
         [SerializeField] private ShroomType _shroomType;
         
@@ -27,11 +27,9 @@ namespace TeamShrimp.GGJ23
             set => _shroomType = value;
         }
         
-        public Vector2Int ShroomPosition
-        {
-            get => _shroomPosition;
-            set => _shroomPosition = value;
-        }
+        public Vector2Int ShroomPosition => (Vector2Int) MushroomManager.Instance?.GetCellPositionForMush(WorldPosition);
+
+        public Vector3 WorldPosition { get; set; }
 
         public ShroomBase Parent
         {
@@ -69,13 +67,13 @@ namespace TeamShrimp.GGJ23
         {
             this._shroomId = MushroomManager.Instance.GenerateUniqueId();
             this.Children = new List<ShroomBase>();
-            this.transform.position = new Vector3(_shroomPosition.x, _shroomPosition.y, 1);
+            this.transform.position = WorldPosition;
             _connector = GetComponent<LineRenderer>();
             _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
             if (Parent != null)
             {
-                _connector.SetPosition(1, new Vector3(ParentPosition.x, ParentPosition.y, 1));
+                _connector.SetPosition(1, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
             }
         }
 
@@ -87,8 +85,9 @@ namespace TeamShrimp.GGJ23
         {
             return ShroomType + "{" +
                    "\n ID=" + _shroomId +
-                   "\n Position=" + _shroomPosition +
-                   "\n Parent=" + _parent + "\n}";
+                   "\n Position=" + ShroomPosition +
+                   "\n Parent=" + _parent + 
+                   "\n WorldPosition=" + WorldPosition + "\n}";
             // "\n Children=" + String.Join('\n', _children) + "\n}";
         }
     }
