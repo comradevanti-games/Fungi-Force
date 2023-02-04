@@ -14,7 +14,10 @@ namespace TeamShrimp.GGJ23
         private static IEnumerable<Vector2Int> PositionsInMapOfSize(int size)
         {
             for (var x = -(size - 1); x <= size - 1; x++)
-                yield return new Vector2Int(x, 0);
+            for (var y = -(size - 1); y <= size - 1; y++)
+            {
+                yield return new Vector2Int(x, y);
+            }
         }
 
         private static Map PlaceTileAt(Map map, Vector2Int pos, Tile tile) =>
