@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -44,6 +45,28 @@ namespace TeamShrimp.GGJ23
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
             TryFindShroom(pos).IsNone();
+
+        public Vector2Int? GetClosestMapPoint(Vector3 worldPoint)
+        {
+            Vector3Int min = Vector3Int.zero;
+            float minDist = float.MaxValue;
+            foreach (var vector3Int in groundTilemap.cellBounds.allPositionsWithin)
+            {
+                float dist;
+                if ((dist = Vector3.Distance(worldPoint, vector3Int)) < minDist)
+                {
+                    min = vector3Int;
+                    minDist = dist;
+                }
+            }
+
+            if (minDist < 2)
+            {
+                return new Vector2Int(min.x, min.y);
+            }
+
+            return null;
+        }
 
         private void InstantiateMapWith(int size)
         {

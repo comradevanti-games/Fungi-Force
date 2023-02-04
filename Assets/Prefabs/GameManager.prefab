@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
-  cellLength: 1
+  cellLength: 0.5
   initialPrefab: {fileID: 3888803409615587763, guid: 8981e03bd711bf64591eeedb5f2ae862, type: 3}
   ghostShroom: {fileID: 6521943627156797592}
-  maxDistanceAllowed: 5
+  maxDistanceAllowed: 2
+  map: {fileID: 0}
 --- !u!114 &938238293
 MonoBehaviour:
   m_ObjectHideFlags: 0

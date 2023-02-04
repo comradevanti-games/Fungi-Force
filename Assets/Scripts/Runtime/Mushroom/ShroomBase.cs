@@ -13,7 +13,7 @@ namespace TeamShrimp.GGJ23
 
         private Vector2Int _shroomPosition;
 
-     [SerializeField]   private ShroomType _shroomType;
+        [SerializeField] private ShroomType _shroomType;
         
         private ShroomBase _parent;
 
