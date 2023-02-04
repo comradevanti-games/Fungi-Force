@@ -33,6 +33,7 @@ namespace TeamShrimp.GGJ23
 
         public void OnConnectCommand(BaseCommand cmd)
         {
+            Debug.Log("CONNECT COMMAND");
             if (Blackboard.IsHost && cmd is ConnectionInitCommand connectCmd)
                 OnGuestJoined(connectCmd.playerName);
             else
