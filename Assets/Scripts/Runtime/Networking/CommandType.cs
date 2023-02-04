@@ -1,4 +1,4 @@
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public enum CommandType
     {

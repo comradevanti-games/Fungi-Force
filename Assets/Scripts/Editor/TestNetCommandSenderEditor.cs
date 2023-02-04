@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
-using TeamShrimp.GGJ23.Runtime.Networking;
+using TeamShrimp.GGJ23.Networking;
 
 
 [CustomEditor(typeof(TestNetCommandSender))]

@@ -1,9 +1,10 @@
 using System.IO;
 using System.Numerics;
 using System.Text;
+using TeamShrimp.GGJ23;
 using UnityEngine;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     // LAYOUT: [0, mushType, long id, vec2int pos, vec2int sourcePos]
     public class CutCommand : BaseCommand

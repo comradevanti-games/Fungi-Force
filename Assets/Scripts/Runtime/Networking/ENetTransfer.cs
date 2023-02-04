@@ -2,7 +2,7 @@
 using ENet;
 using UnityEngine;
 
-namespace TeamShrimp.GGJ23.Runtime.Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public class ENetTransfer : ITransferLayer
     {

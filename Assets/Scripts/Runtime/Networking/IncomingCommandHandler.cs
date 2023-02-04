@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public class IncomingCommandHandler : MonoBehaviour
     {
@@ -92,7 +92,7 @@ namespace Networking
             return (BaseCommand) Activator.CreateInstance(typeof(T), br);
         }
     }
-    
+
     [Serializable]
     public class CommandSubscription
     {

@@ -1,7 +1,6 @@
-using TeamShrimp.GGJ23.Runtime.Networking;
 using UnityEngine;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public class MatchmakingCommunicator : MonoBehaviour
     {

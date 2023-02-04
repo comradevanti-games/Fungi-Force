@@ -1,4 +1,4 @@
-﻿namespace TeamShrimp.GGJ23.Runtime.Networking
+﻿namespace TeamShrimp.GGJ23.Networking
 {
     public interface ITransferLayer
     {

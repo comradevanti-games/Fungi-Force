@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using UnityEngine;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public static class SerializerExtension
     {

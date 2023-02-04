@@ -1,9 +1,8 @@
 using System;
 using ENet;
-using Networking;
 using UnityEngine;
 
-namespace TeamShrimp.GGJ23.Runtime.Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     [RequireComponent(typeof(IncomingCommandHandler))]
     public class NetworkManager : MonoBehaviour

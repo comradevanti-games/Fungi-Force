@@ -1,7 +1,8 @@
 using System.IO;
 using System.Text;
+using TeamShrimp.GGJ23;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public class ConnectionInitCommand : BaseCommand
     {

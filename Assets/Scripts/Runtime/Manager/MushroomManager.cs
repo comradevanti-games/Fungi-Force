@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
-using Networking;
-using TeamShrimp.GGJ23.Runtime.Networking;
+using TeamShrimp.GGJ23.Networking;
 using UnityEngine;
 
 namespace TeamShrimp.GGJ23

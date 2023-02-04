@@ -1,7 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 
-namespace Networking
+namespace TeamShrimp.GGJ23.Networking
 {
     public class ReadyCommand : BaseCommand
     {
