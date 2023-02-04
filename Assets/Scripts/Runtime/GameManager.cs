@@ -1,4 +1,5 @@
 using System.Collections;
+using TeamShrimp.GGJ23.Networking;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +12,6 @@ namespace TeamShrimp.GGJ23
 
         private Team currentTeam = Team.Red;
 
-        
         private void Start()
         {
             IEnumerator WaitAndStart()
@@ -21,6 +21,18 @@ namespace TeamShrimp.GGJ23
             }
 
             StartCoroutine(WaitAndStart());
+        }
+
+
+        public void OnNetworkCommand(BaseCommand cmd)
+        {
+            switch (cmd)
+            {
+                case PlaceCommand _:
+                case CutCommand _:
+                    EndOpponentRound();
+                    break;
+            }
         }
 
         public void OnPlayerAction()
@@ -35,6 +47,12 @@ namespace TeamShrimp.GGJ23
 
             if (Blackboard.IsHost)
                 StartRound();
+        }
+
+        private void EndOpponentRound()
+        {
+            SwitchTeam();
+            StartRound();
         }
 
         private void StartRound()
