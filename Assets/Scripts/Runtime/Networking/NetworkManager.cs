@@ -6,6 +6,7 @@ namespace TeamShrimp.GGJ23.Networking
     [RequireComponent(typeof(IncomingCommandHandler))]
     public class NetworkManager : MonoBehaviour
     {
+        [SerializeField] private bool initFromCache;
         [SerializeField] private ITransferLayer.Type transferType;
 
         private IncomingCommandHandler commandHandler;
@@ -15,6 +16,7 @@ namespace TeamShrimp.GGJ23.Networking
         private void Awake()
         {
             commandHandler = GetComponent<IncomingCommandHandler>();
+            if (initFromCache) InitFromBlackboard();
         }
 
         public void FixedUpdate()
@@ -32,7 +34,7 @@ namespace TeamShrimp.GGJ23.Networking
             connection = Opt.Some(Connection.AsGuest(transferType, ip, port));
         }
 
-        public void InitFromBlackboard()
+        private void InitFromBlackboard()
         {
             connection = Blackboard.EstablishedConnection;
         }
