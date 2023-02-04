@@ -62,6 +62,8 @@ namespace TeamShrimp.GGJ23
         {
             float horizontalMovement = Input.GetAxis("Horizontal");
             float verticalMovement = Input.GetAxis("Vertical");
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = 11;
 
             if (Math.Abs(horizontalMovement) + Math.Abs(verticalMovement) > 0)
             {
@@ -71,11 +73,11 @@ namespace TeamShrimp.GGJ23
 
             if (Input.GetMouseButtonDown(1))
             {
-                this._previousMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
+                this._previousMousePosition = MainCamera.ScreenToWorldPoint(mousePosition);
             }
             else if (Input.GetMouseButton(1))
             {
-                Vector3 currentMousePositon = MainCamera.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 currentMousePositon = MainCamera.ScreenToWorldPoint(mousePosition);
                 Vector2 normalizedMouseChange = new Vector2(this._previousMousePosition.x - currentMousePositon.x,
                     this._previousMousePosition.y - currentMousePositon.y);
                 this._mouseChangeX = normalizedMouseChange.x;
