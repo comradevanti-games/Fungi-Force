@@ -26,6 +26,7 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private GameObject initialPrefab;
 
         [SerializeField] private GhostShroom ghostShroom;
+        [SerializeField] private NetworkManager networkManager;
 
         [SerializeField] private float maxDistanceAllowed;
         
@@ -149,7 +150,7 @@ namespace TeamShrimp.GGJ23
             onShroomPlaced.Invoke();
 
             PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
-            NetworkManager.client.SendCommand(placeCommand);
+            networkManager.SendCommand(placeCommand);
             if (debug)
             {
                 Debug.Log("SENDING MUSHROOM WITH COMMAND " + placeCommand);
