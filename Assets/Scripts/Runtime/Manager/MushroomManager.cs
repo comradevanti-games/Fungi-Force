@@ -45,6 +45,7 @@ namespace TeamShrimp.GGJ23
             foreach (GameObject shroom in existingShrooms)
             {
                 ShroomBase shroomBase = shroom.GetComponent<ShroomBase>();
+                shroomBase.ShroomPosition = Vector2Int.RoundToInt(shroomBase.transform.position);
                 shroomBase.Initialize();
                 _shroomsInGame.Add(shroomBase);
             }
@@ -62,6 +63,8 @@ namespace TeamShrimp.GGJ23
                 if (_selectedShroom == null)
                 {
                     _selectedShroom = TryGetShroomAtPositon(Vector2Int.RoundToInt(mousePosition));
+                    if (debug)
+                        Debug.Log("Found Shroom: " + _selectedShroom);
                 }
             }
             else if (Input.GetMouseButton(0))
@@ -96,6 +99,8 @@ namespace TeamShrimp.GGJ23
                 Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
             // TODO Change to Map request
             RaycastHit2D hit = Physics2D.CircleCast(gridPosition, cellLength, Vector2.zero);
+            if (debug)
+                Debug.Log("Raycast Hit: " + hit.collider.tag);
             if (hit && hit.collider.CompareTag("Shroom"))
             {
                 return GetMushroomAtPosition(Vector2Int.CeilToInt(hit.point));

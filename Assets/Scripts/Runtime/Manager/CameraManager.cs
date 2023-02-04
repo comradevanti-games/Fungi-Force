@@ -33,6 +33,8 @@ namespace TeamShrimp.GGJ23
         void Start()
         {
             Instance = this;
+            if (Blackboard.Game != null)
+                MapSize = Blackboard.Game.MapSize;
             if (MapSize == 0f)
             {
                 MapSize = TESTING_MAP_SIZE;

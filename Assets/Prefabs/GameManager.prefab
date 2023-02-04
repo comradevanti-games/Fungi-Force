@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7183072269508939756
 MonoBehaviour:
@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac59e9371b55a440bf4d462bcac5845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellLength: 2
+  debug: 1
+  cellLength: 1
   initialPrefab: {fileID: 3888803409615587763, guid: 8981e03bd711bf64591eeedb5f2ae862, type: 3}
   ghostShroom: {fileID: 0}
   maxDistanceAllowed: 5
@@ -63,3 +64,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   cameraSmoothing: 0.01
+  pointyTop: 0
+  TESTING_MAP_SIZE: 5

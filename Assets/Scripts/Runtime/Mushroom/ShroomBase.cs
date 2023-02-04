@@ -72,7 +72,7 @@ namespace TeamShrimp.GGJ23
             this.Children = new List<ShroomBase>();
             this.transform.position = new Vector3(_shroomPosition.x, _shroomPosition.y, 1);
             _connector = GetComponent<LineRenderer>();
-            _connector.SetPosition(0, transform.position);
+            _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
             if (Parent != null)
             {

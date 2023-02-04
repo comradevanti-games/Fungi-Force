@@ -118,7 +118,7 @@ Transform:
   m_Children:
   - {fileID: 8941858535450596166}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2016568847121467633
 SpriteRenderer:
@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68df59e0eef54095898150791cbd7b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shroomType: {fileID: 11400000, guid: f2976ba424367ed48ac4c1816e918918, type: 2}
 --- !u!120 &6399029439090032448
 LineRenderer:
   serializedVersion: 2
