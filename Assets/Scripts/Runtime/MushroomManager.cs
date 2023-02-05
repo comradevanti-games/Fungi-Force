@@ -199,14 +199,14 @@ namespace TeamShrimp.GGJ23
             var placedShroom = Instantiate(_selectedShroomPrefab)
                 .GetComponentInChildren<ShroomBase>();
             placedShroom.transform.position = map.GridToWorldPos(gridPosition);
+            placedShroom.Initialize(gameManager.MyTeam);
 
             Debug.Log(placedShroom);
 
             CheckForConnections(placedShroom);
 
             Debug.Log("Checked for Connections");
-
-            placedShroom.Initialize(gameManager.CurrentTeam);
+            
             onShroomPlaced.Invoke();
 
             Debug.Log("Invoked Event");

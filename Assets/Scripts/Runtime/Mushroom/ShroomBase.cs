@@ -111,7 +111,8 @@ namespace TeamShrimp.GGJ23
                    "\n ID=" + _shroomId +
                    "\n Position=" + ShroomPosition +
                    "\n Parent=" + _parent + 
-                   "\n WorldPosition=" + transform.position + "\n}";
+                   "\n WorldPosition=" + transform.position +
+                   "\n Owned by=" + Owner + "\n}";
             // "\n Children=" + String.Join('\n', _children) + "\n}";
         }
     }
