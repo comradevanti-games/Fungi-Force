@@ -44,8 +44,7 @@ namespace TeamShrimp.GGJ23
 
             StartCoroutine(WaitAndStart());
         }
-
-
+        
         public void OnNetworkCommand(BaseCommand cmd)
         {
             switch (cmd)
