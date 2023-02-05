@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shroomType: {fileID: 11400000, guid: f2976ba424367ed48ac4c1816e918918, type: 2}
+  _shroomType: {fileID: 11400000, guid: cf6953fa0b74645459483eeaaf058d5c, type: 2}
   _costsResource: 0
   _price: 1
 --- !u!1 &898731793590859046
