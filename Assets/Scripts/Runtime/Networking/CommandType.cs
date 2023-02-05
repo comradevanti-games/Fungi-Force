@@ -12,7 +12,7 @@ namespace TeamShrimp.GGJ23.Networking
         REMATCH = 249,
         WORLD_INIT = 248, // LAYOUT: [248, int side_length, long seed] - WorldInitCommand
         CONNECT = 247, // LAYOUT: [247, namelength, ... name ...] - ConnectCommand
-        
+        WIN = 246,
         
         ALL = 127, // APP INTERNAL, SUBSCRIBING TO THIS SUBSCRIBES TO ALL COMMANDS
         
