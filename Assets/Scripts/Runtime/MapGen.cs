@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ComradeVanti.CSharpTools;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,10 +10,18 @@ namespace TeamShrimp.GGJ23
 {
     public static class MapGen
     {
-        private static readonly Map Empty =
+        private static readonly Map EmptyMap =
             new Map(ImmutableDictionary<Vector2Int, Tile>.Empty,
                 ImmutableDictionary<Vector2Int, Structure>.Empty);
 
+
+        private static T WithSeededRandom<T>(int seed, Func<T> f)
+        {
+            Random.InitState(seed);
+            var result = f();
+            Random.InitState(DateTime.Now.GetHashCode());
+            return result;
+        }
 
         private static IEnumerable<Vector2Int> PositionsInMapOfSize(int size)
         {
@@ -39,47 +48,95 @@ namespace TeamShrimp.GGJ23
             new Map(map.TilesByPosition,
                 map.StructuresByPosition.Add(pos, structure));
 
+        private static Vector2Int HomePosition(Team team, int mapSize) =>
+            new Vector2Int((mapSize - 2) * (team == Team.Red ? 1 : -1), 0);
 
-        public static Map GenerateMap(GenerationParams genGenerationParams)
+
+        private static bool IsOnTeamSide(Vector2Int pos, Team team) =>
+            team == Team.Red
+                ? pos.x > 0
+                : pos.x < 0;
+
+        public static Map GenerateMap(GenerationParams genParams)
         {
-            Random.InitState(genGenerationParams.Seed);
-
-            var variantCount = genGenerationParams.TileType.Variants.Count();
-            
-            Map GeneratePosition(Map map, Vector2Int pos)
+            return WithSeededRandom(genParams.Seed, () =>
             {
-                var variantIndex = Random.Range(0, variantCount);
-                var tile = new Tile(genGenerationParams.TileType, variantIndex);
-                return PlaceTileAt(map, pos, tile);
-            }
+                Vector2Int GenerateFreeTeamPosition(Map map, Team team) =>
+                    map.TilesByPosition
+                        .Keys
+                        // Not taken
+                        .Where(it =>
+                            !map.StructuresByPosition.ContainsKey(it))
+                        // Is on the correct side
+                        .Where(it => IsOnTeamSide(it, team))
+                        .ToArray()
+                        // Take a random one
+                        .Then(possible =>
+                            possible[Random.Range(0, possible.Length)]);
 
-            var tilesOnly = PositionsInMapOfSize(genGenerationParams.Size)
-                .Aggregate(Empty, GeneratePosition);
+                Map GenerateTileAt(Map map, Vector2Int pos)
+                {
+                    var variantCount =
+                        genParams.TileType.Variants.Count();
+                    var variantIndex = Random.Range(0, variantCount);
+                    var tile = new Tile(genParams.TileType,
+                        variantIndex);
+                    return PlaceTileAt(map, pos, tile);
+                }
 
-            var redTeamPos = new Vector2Int(-(genGenerationParams.Size - 1), 0);
-            var withRedTeam = PlaceStructureAt(tilesOnly, redTeamPos,
-                new Structure(genGenerationParams.HomeStructure, Team.Red));
+                Map PlaceHome(Map map, Team team)
+                {
+                    var homePos = HomePosition(team, genParams.Size);
+                    return PlaceStructureAt(map, homePos,
+                        new Structure(genParams.HomeStructure, Opt.Some(team)));
+                }
 
-            var blueTeamPos = new Vector2Int(genGenerationParams.Size - 1, 0);
-            var withBlueTeam = PlaceStructureAt(withRedTeam, blueTeamPos,
-                new Structure(genGenerationParams.HomeStructure, Team.Blue));
+                Map PlaceTeamTree(Map map, Team team)
+                {
+                    var treePos = GenerateFreeTeamPosition(map, team);
+                    var structure = new Structure(genParams.TreeStructure,
+                        Opt.None<Team>());
+                    return PlaceStructureAt(map, treePos, structure);
+                }
 
-            Random.InitState(DateTime.Now.GetHashCode());
+                Map PlaceTeamTrees(Map map, Team team, int count)
+                {
+                    for (var i = 0; i < count; i++)
+                        map = PlaceTeamTree(map, team);
 
-            return withBlueTeam;
+                    return map;
+                }
+
+                Map PlaceTrees(Map map)
+                {
+                    var treeCountPerTeam = Mathf.Max(genParams.Size / 4, 1);
+                    return map
+                        .Then(it =>
+                            PlaceTeamTrees(it, Team.Red, treeCountPerTeam))
+                        .Then(it =>
+                            PlaceTeamTrees(it, Team.Blue, treeCountPerTeam));
+                }
+
+                return PositionsInMapOfSize(genParams.Size)
+                    .Aggregate(EmptyMap, GenerateTileAt)
+                    .Then(map => PlaceHome(map, Team.Red))
+                    .Then(map => PlaceHome(map, Team.Blue))
+                    .Then(PlaceTrees);
+            });
         }
 
         public record GenerationParams(
             int Seed,
             int Size,
             TileType TileType,
-            StructureType HomeStructure);
+            StructureType HomeStructure,
+            StructureType TreeStructure);
 
         public record Tile(
             TileType Type,
             int VariantIndex);
 
-        public record Structure(StructureType Type, Team Team);
+        public record Structure(StructureType Type, IOpt<Team> Team);
 
         public record Map(
             IImmutableDictionary<Vector2Int, Tile> TilesByPosition,
