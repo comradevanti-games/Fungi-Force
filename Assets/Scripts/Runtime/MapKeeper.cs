@@ -16,14 +16,21 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private Tilemap groundTilemap;
         [SerializeField] private bool debug;
 
+        private readonly Dictionary<Vector2Int, GameObject>
+            gameObjectsByPosition =
+                new Dictionary<Vector2Int, GameObject>();
+
+        private readonly HashSet<Vector2Int> groundPositions =
+            new HashSet<Vector2Int>();
+
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
             new Dictionary<Vector2Int, ShroomBase>();
 
-        private readonly Dictionary<Vector2Int, MapGen.Structure> structuresByPosition =
-            new Dictionary<Vector2Int, MapGen.Structure>();
+        private readonly Dictionary<Vector2Int, MapGen.Structure>
+            structuresByPosition =
+                new Dictionary<Vector2Int, MapGen.Structure>();
 
-        private readonly Dictionary<Vector2Int, GameObject> gameObjectsByPosition =
-            new Dictionary<Vector2Int, GameObject>();
+        private int mapSize;
 
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
@@ -56,7 +63,7 @@ namespace TeamShrimp.GGJ23
             {
                 // --Debug.Log("Strategic View");
                 var color = groundTilemap.color;
-                color.a = color.a < 1 ? 1 : 0.25f;
+                color.a = color.a < 0.95f ? 0.95f : 0.25f;
                 groundTilemap.color = color;
             }
         }
@@ -64,14 +71,24 @@ namespace TeamShrimp.GGJ23
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
-        public IOpt<MapGen.Structure> TryFindStructure(Vector2Int pos) => structuresByPosition.TryGet(pos);
+        public IOpt<MapGen.Structure> TryFindStructure(Vector2Int pos) =>
+            structuresByPosition.TryGet(pos);
 
-        public IOpt<GameObject> TryFindObject(Vector2Int pos) => gameObjectsByPosition.TryGet(pos);
+        public IOpt<GameObject> TryFindObject(Vector2Int pos) =>
+            gameObjectsByPosition.TryGet(pos);
+
+        public List<ShroomBase> FindAllShroomsOfTypeAndOwner(
+            StructureType type, Team owner)
+        {
+            return AllShrooms.Where(shroom =>
+                shroom.ShroomType == type && shroom.Owner == owner).ToList();
+        }
 
         public void AddShroom(ShroomBase shroom)
         {
             var pos = WorldToGridPos(shroom.transform.position);
             shroomsByPosition.Add((Vector2Int) pos, shroom);
+            // gameObjectsByPosition.Add((Vector2Int) pos, shroom.gameObject);
             groundTilemap.SetTileFlags(pos, TileFlags.None);
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
         }
@@ -86,8 +103,25 @@ namespace TeamShrimp.GGJ23
                 Destroy(toDelete);
         }
 
+        public bool IsInMap(Vector2Int position) =>
+            Hexagon.Contains(mapSize, position);
+
+        public bool HasGroundAt(Vector2Int position) =>
+            groundPositions.Contains(position);
+
+        public bool IsFreeAt(Vector2Int position) =>
+            !structuresByPosition.ContainsKey(position);
+
+        public bool HasTreeAt(Vector2Int position)
+        {
+            return structuresByPosition
+                .TryGet(position)
+                .Exists(it => it.Type.name == "Tree");
+        }
+
         public bool CanPlace(StructureType type, Vector2Int pos) =>
-            TryFindShroom(pos).IsNone();
+            IsInMap(pos) && HasGroundAt(pos) &&
+            (HasTreeAt(pos) || IsFreeAt(pos));
 
         public Vector3 SnapToGridPos(Vector3 worldPos)
         {
@@ -175,7 +209,6 @@ namespace TeamShrimp.GGJ23
 
         public void ClaimArea(ShroomBase root)
         {
-            
         }
 
         public void RemoveAtPosition(Vector2Int pos)
@@ -194,6 +227,7 @@ namespace TeamShrimp.GGJ23
 
         private void InstantiateMapWith(int seed, int size)
         {
+            mapSize = size;
             var genParams =
                 new MapGen.GenerationParams(seed, size,
                     tileTypesByName,
@@ -207,6 +241,7 @@ namespace TeamShrimp.GGJ23
         {
             foreach (var (pos, tile) in map.TilesByPosition)
             {
+                if (tile.Type.name != "Water") groundPositions.Add(pos);
                 var variant = tile.Type.Variants.ElementAt(tile.VariantIndex);
                 groundTilemap.SetTile(pos.To3Int(), variant);
             }

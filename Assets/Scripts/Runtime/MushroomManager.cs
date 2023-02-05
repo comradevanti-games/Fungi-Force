@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
 using TeamShrimp.GGJ23.Networking;
+using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -212,31 +214,35 @@ namespace TeamShrimp.GGJ23
 
         public ShroomBase PlaceMushroom(Vector2Int gridPosition)
         {
+            MapGen.Structure atPos = null;
+            map.TryFindStructure(gridPosition).Iter(structure => atPos = structure);
+            
+            if (atPos != null && atPos.Type == map.GetStructureType("Tree"))
+            {
+                _selectedShroomPrefab = map.GetStructureType("PowerShroom").Prefab;
+                map.DeleteObject(gridPosition);
+            }
             var prefabBase =
                 _selectedShroomPrefab.GetComponentInChildren<ShroomBase>();
             if (debug)
                 Debug.Log("Placing Shroom at: " + gridPosition +
-                          ", selected Shroom is: " + _selectedShroom);
+                          ", selected Shroom is: " + _selectedShroom + "\n" + 
+                          prefabBase + " " + map);
             if (_selectedShroom == null || !PositionsInRange(
                                             _selectedShroom.ShroomPosition,
                                             gridPosition)
                                         || !map.CanPlace(prefabBase.ShroomType,
                                             gridPosition))
+            {
+                Debug.Log("Could not place shroom at " + map.CanPlace(prefabBase.ShroomType, gridPosition));
                 return null;
+            }
 
             if (!prefabBase.Pay())
                 return null;
             if (debug)
                 Debug.Log("Is free");
 
-            MapGen.Structure atPos = null;
-            map.TryFindStructure(gridPosition).Iter(structure => atPos = structure);
-            
-            if (atPos != null && atPos.Type == map.GetStructureType("Tree"))
-            {
-                
-            }
-            
             var placedShroom = Instantiate(_selectedShroomPrefab)
                 .GetComponentInChildren<ShroomBase>();
             placedShroom.transform.position = map.GridToWorldPos(gridPosition);
@@ -271,7 +277,7 @@ namespace TeamShrimp.GGJ23
             connection.Initialize(start, end, map);
             _shroomConnections.Add(connection);
             
-            Debug.Log("Loop: " + IsConnectionLooping(connection));
+            // Debug.Log("Loop: " + IsConnectionLooping(connection));
         }
 
         public ShroomBase GetMushroomAtPosition(Vector2Int gridPosition)
@@ -354,6 +360,18 @@ namespace TeamShrimp.GGJ23
             {
                 child.gameObject.SetActive(childI == i);
             });
+        }
+
+        public void AssignResources(Team team)
+        {
+            if (team != gameManager.MyTeam)
+                return;
+
+            List<ShroomBase> ownedPowerShrooms =
+                map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("PowerShroom"), team);
+            if (ResourceTracker.Add(Resource.SPORE, ownedPowerShrooms.Count))
+                return;
+            throw new ArgumentException("Could not assign resource " + Resource.SPORE + " to " + team);
         }
     }
 }

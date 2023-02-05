@@ -23,22 +23,6 @@ namespace TeamShrimp.GGJ23
             return result;
         }
 
-        private static IEnumerable<Vector2Int> PositionsInMapOfSize(int size)
-        {
-            var diameter = size * 2 - 1;
-            var minY = -(size - 1);
-            var maxY = size - 1;
-            for (var y = minY; y <= maxY; y++)
-            {
-                var isOffset = y % 2 != 0;
-                var width = diameter - Mathf.Abs(y);
-                var minX = isOffset ? -(width - 1) / 2 - 1 : -width / 2;
-                var maxX = isOffset ? (width - 1) / 2 : width / 2;
-                for (var x = minX; x <= maxX; x++)
-                    yield return new Vector2Int(x, y);
-            }
-        }
-
         private static Map PlaceTileAt(Map map, Vector2Int pos, Tile tile) =>
             map with {TilesByPosition = map.TilesByPosition.SetItem(pos, tile)};
 
@@ -139,7 +123,7 @@ namespace TeamShrimp.GGJ23
                             PlaceTeamTrees(it, Team.Blue, treeCountPerTeam));
                 }
 
-                return PositionsInMapOfSize(genParams.Size)
+                return Hexagon.GeneratePositions(genParams.Size)
                     .Aggregate(EmptyMap, GenerateTileAt)
                     .Then(map => PlaceHome(map, Team.Red))
                     .Then(map => PlaceHome(map, Team.Blue))
