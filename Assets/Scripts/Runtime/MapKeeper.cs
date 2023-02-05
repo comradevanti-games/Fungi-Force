@@ -19,6 +19,12 @@ namespace TeamShrimp.GGJ23
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
             new Dictionary<Vector2Int, ShroomBase>();
 
+        private readonly Dictionary<Vector2Int, MapGen.Structure> structuresByPosition =
+            new Dictionary<Vector2Int, MapGen.Structure>();
+
+        private readonly Dictionary<Vector2Int, GameObject> gameObjectsByPosition =
+            new Dictionary<Vector2Int, GameObject>();
+
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
@@ -58,12 +64,26 @@ namespace TeamShrimp.GGJ23
         public IOpt<ShroomBase> TryFindShroom(Vector2Int pos) =>
             shroomsByPosition.TryGet(pos);
 
+        public IOpt<MapGen.Structure> TryFindStructure(Vector2Int pos) => structuresByPosition.TryGet(pos);
+
+        public IOpt<GameObject> TryFindObject(Vector2Int pos) => gameObjectsByPosition.TryGet(pos);
+
         public void AddShroom(ShroomBase shroom)
         {
             var pos = WorldToGridPos(shroom.transform.position);
             shroomsByPosition.Add((Vector2Int) pos, shroom);
             groundTilemap.SetTileFlags(pos, TileFlags.None);
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
+        }
+
+        public void DeleteObject(Vector2Int pos)
+        {
+            GameObject toDelete = null;
+            TryFindObject(pos).Iter(obj => toDelete = obj);
+            if (!toDelete)
+                return;
+            if (gameObjectsByPosition.Remove(pos))
+                Destroy(toDelete);
         }
 
         public bool CanPlace(StructureType type, Vector2Int pos) =>
@@ -202,6 +222,8 @@ namespace TeamShrimp.GGJ23
                         structure.Team.Iter(it => shroom.Owner = it);
                         AddShroom(shroom);
                     });
+                structuresByPosition.Add(pos, structure);
+                gameObjectsByPosition.Add(pos, go);
             }
         }
 

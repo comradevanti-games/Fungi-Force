@@ -228,6 +228,15 @@ namespace TeamShrimp.GGJ23
                 return null;
             if (debug)
                 Debug.Log("Is free");
+
+            MapGen.Structure atPos = null;
+            map.TryFindStructure(gridPosition).Iter(structure => atPos = structure);
+            
+            if (atPos != null && atPos.Type == map.GetStructureType("Tree"))
+            {
+                
+            }
+            
             var placedShroom = Instantiate(_selectedShroomPrefab)
                 .GetComponentInChildren<ShroomBase>();
             placedShroom.transform.position = map.GridToWorldPos(gridPosition);
