@@ -20,7 +20,11 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private float startResourceValue;
 
 
+        public Team MyTeam => Blackboard.IsHost ? Team.Red : Team.Blue;
+        
         public Team CurrentTeam { get; private set; } = Team.Red;
+
+        public bool IsMyTurn => CurrentTeam == MyTeam;
 
 
         private void Start()

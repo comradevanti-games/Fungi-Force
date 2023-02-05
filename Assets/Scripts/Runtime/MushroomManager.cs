@@ -68,6 +68,8 @@ namespace TeamShrimp.GGJ23
         // Update is called once per frame
         void Update()
         {
+            if(!gameManager.IsMyTurn) return;
+            
             Vector3 mousePosition = Input.mousePosition;
             // mousePosition.z = Mathf.Abs(CameraManager.Instance.MainCamera.transform.position.z) + 1;
             mousePosition = CameraManager.Instance.MainCamera.ScreenToWorldPoint(mousePosition);
