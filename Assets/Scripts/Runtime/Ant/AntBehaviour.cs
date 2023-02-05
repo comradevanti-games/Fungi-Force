@@ -32,7 +32,6 @@ namespace TeamShrimp.GGJ23
         
         public OffsetRotation offsetRotation;
         
-        private int dontDie = 0;
 
 
         public byte hp = 3;
@@ -41,12 +40,12 @@ namespace TeamShrimp.GGJ23
 
         private List<Vector3Int> offsets = new List<Vector3Int>()
         {
-            new Vector3Int(1, -1), // UP RIGHT
-            new Vector3Int(1, 0, -1), // RIGHT
             new Vector3Int(0, 1, -1), // RIGHT DOWN
-            new Vector3Int(-1, 1, 0),
+            new Vector3Int(1, 0, -1), // RIGHT
+            new Vector3Int(1, -1), // UP RIGHT
+            new Vector3Int(0, -1, 1), // UP LEFT
             new Vector3Int(-1, 0, +1),
-            new Vector3Int(0, -1, 1) // UP LEFT
+            new Vector3Int(-1, 1, 0),
         };
 
         private List<Vector3Int> currentPredictionCubeCoords = new List<Vector3Int>();
@@ -92,32 +91,45 @@ namespace TeamShrimp.GGJ23
         public void Start()
         {
             lr = GetComponent<LineRenderer>();
+        }
+
+        public void Initialize(Vector3Int cubeStartPosition, OffsetRotation offsetRotationInit)
+        {
+            anthillPosition = cubeStartPosition;
+            this.offsetRotation = offsetRotationInit;
+            
             pathCreator = PathCreator(new AntBehaviourPredictionState()
             {
                 cubePos = anthillPosition,
-                rotation = offsetRotation
+                rotation = offsetRotationInit
             });
             mapSize = Blackboard.Game.MapSize;
             
             patheveryframe = CreatePathEveryFrame(pathCreator);
-            InvokeRepeating(nameof(Turn), 1f, 1f);
+            Debug.Log("INITIALIZED ANT");
+            //InvokeRepeating(nameof(Turn), 1f, 1f);
         }
 
-        public Vector3Int? FindClosebyMushroom(Vector3Int pos, OffsetRotation rotation)
+        public Vector3Int? FindClosebyMushroom(Vector3Int pos, OffsetRotation rotation, bool isSimulated, List<Vector3Int> ignore)
         {
-            List<ShroomBase> sb = mapKeeper.AllShrooms.ToList().FindAll((ShroomBase b) => b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) <= 1);
+            List<ShroomBase> sb = mapKeeper.AllShrooms.ToList().FindAll((ShroomBase b) => b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) ==1);
+            foreach (var ig in ignore)
+            {
+                sb.RemoveAll(baseshroom => baseshroom.ShroomPosition.To3Int().OffsetToCube().Equals(ig));
+            }
             if (sb.Count == 0)
             {
                 return null;
             }
 
-            Debug.Log("FOUND CLOSEBY MUSHROOMS, STEALING ONE");
+            Debug.Log("FOUND CLOSE BY MUSHROOMS, STEALING ONE");
             foreach (var shroomBase in sb)
             {
                 Vector3Int nextSpace = pos + offsets[(int) rotation];
                 if (nextSpace.Equals(shroomBase.ShroomPosition.To3Int().OffsetToCube()))
                 {
-                    KillShroom(shroomBase);
+                    if(!isSimulated)
+                        KillShroom(shroomBase);
                     return nextSpace;
                 }
             }
@@ -130,7 +142,8 @@ namespace TeamShrimp.GGJ23
                     : -1;
             });
             Vector3Int next = sb[0].ShroomPosition.To3Int().OffsetToCube();
-            KillShroom(sb[0]);
+            if(!isSimulated)
+                KillShroom(sb[0]);
             return next;
         }
 
@@ -144,14 +157,15 @@ namespace TeamShrimp.GGJ23
         public void LoadPositionFromCubePos()
         {
             Vector3 newPos = grid.CellToWorld(currentCubePosition.CubeToOffset());
-            IEnumerator ienum = AnimatePositionTo(transform.position, newPos, 0.3f, 5);
-            IEnumerator ienum2 = AnimateScaleTo(transform.localScale, new Vector3(transform.position.x < newPos.x ? -0.1f : 0.1f,0.1f, 0.1f), 0.1f, 3);
+            IEnumerator ienum = AnimatePositionTo(transform.position, newPos, 0.2f, 5);
+            IEnumerator ienum2 = AnimateScaleTo(transform.localScale, new Vector3(transform.position.x < newPos.x ? -0.1f : 0.1f,0.1f, 0.1f), 0.2f, 3);
             StartCoroutine(ienum2);
             StartCoroutine(ienum);
         }
 
         public void Turn()
         {
+            //currentCubePosition = currentCubePosition + offsets[(int) offsetRotation];
             patheveryframe.MoveNext();
             LoadPositionFromCubePos();
         }
@@ -173,10 +187,10 @@ namespace TeamShrimp.GGJ23
 
                 {
                     List<Vector3> positionsPredicted = new List<Vector3>();
-                    IEnumerator ienum = PathCreator(abps);
+                    IEnumerator ienum = PathCreator(abps, true);
 
                     currentPredictionCubeCoords.Clear();
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 30; i++)
                     {
                         if (!ienum.MoveNext())
                         {
@@ -187,16 +201,18 @@ namespace TeamShrimp.GGJ23
                         currentPredictionCubeCoords.Add(predState.cubePos);
                         positionsPredicted.Add(grid.CellToWorld(((Vector3Int) predState.cubePos).CubeToOffset()));
                     }
-
-                    if(debug) lr.SetPositions(positionsPredicted.ToArray());
+                    
+                    if(debug) lr.SetPositions(positionsPredicted.ToArray()) ;
                 }
                 yield return null;
             }
         }
 
 
-        public IEnumerator<AntBehaviourPredictionState> PathCreator(AntBehaviourPredictionState predictionState)
+        public IEnumerator<AntBehaviourPredictionState> PathCreator(AntBehaviourPredictionState predictionState, bool isSimulation = false)
         {
+            List<Vector3Int> stolenShrooms = new List<Vector3Int>();
+            int dontDie = 0;
             var repetitionInternal = 1;
             Vector3Int lastPos = predictionState.cubePos;
             OffsetRotation internalOffsetRotation = predictionState.rotation;
@@ -218,19 +234,20 @@ namespace TeamShrimp.GGJ23
                                 break;
                         }
 
-                        Vector3Int? vector3Int = FindClosebyMushroom(lastPos, internalOffsetRotation);
+                        Vector3Int? vector3Int = FindClosebyMushroom(lastPos, internalOffsetRotation, isSimulation, stolenShrooms);
                         if (vector3Int.HasValue)
                         {
                             var off = vector3Int.Value - lastPos;
                             internalOffsetRotation = (OffsetRotation) offsets.FindIndex(i => i.Equals(off));
                             lastPos = vector3Int.Value;
+                            if(isSimulation) stolenShrooms.Add(lastPos);
                         }
                         else
                             lastPos += offsets[(int) internalOffsetRotation];
                         // anthillPosition = lastPos;
-                        if(dontDie++ > 1000)
+                        if(dontDie++ > 100000)
                             yield break;
-                        if (Vector3Int.zero.CubeDistance(lastPos) >= mapSize - 1)
+                        if (Vector3Int.zero.CubeDistance(lastPos) >= mapSize)
                         {
                             internalOffsetRotation = RotateDir(internalOffsetRotation, 2);
                             phases = 0;
