@@ -11,6 +11,8 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private Tile[] variants;
 
 
-        public IReadOnlyCollection<Tile> Variants => variants;
+        public IEnumerable<Tile> Variants => variants;
+
+        public float Weight => weight;
     }
 }

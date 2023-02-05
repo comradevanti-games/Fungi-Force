@@ -73,7 +73,7 @@ namespace TeamShrimp.GGJ23
                         .Random();
 
                 TileType ChooseTileType() =>
-                    genParams.TileTypesByName.Values.Random();
+                    genParams.TileTypesByName.Values.WeightedRandom(it => it.Weight);
 
                 Map GenerateTileAt(Map map, Vector2Int pos)
                 {
