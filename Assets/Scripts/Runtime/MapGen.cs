@@ -71,6 +71,9 @@ namespace TeamShrimp.GGJ23
                             !map.StructuresByPosition.ContainsKey(it))
                         // Is on the correct side
                         .Where(it => IsOnTeamSide(it, team))
+                        // Is not water
+                        .Where(it =>
+                            map.TilesByPosition[it].Type.name != "Water")
                         // Take a random one
                         .Random();
 
