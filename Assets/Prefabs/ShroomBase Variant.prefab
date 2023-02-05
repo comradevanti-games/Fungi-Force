@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
       propertyPath: m_Name
-      value: ShroomBase
+      value: ShroomBase Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -63,9 +63,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
       insertIndex: -1
       addedObject: {fileID: 89097664}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 89097663}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 07739c187aa217c4cb04647ce510c483, type: 3}
       insertIndex: -1
       addedObject: {fileID: 89097666}
@@ -95,20 +92,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &89097663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4652444610387872751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9f24197fd731f549bf1439b64c77b73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animator: {fileID: 89097664}
-  FPS: 5
 --- !u!114 &89097666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +105,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shroomType: {fileID: 11400000, guid: f2976ba424367ed48ac4c1816e918918, type: 2}
+  _costsResource: 0
+  _price: 0
