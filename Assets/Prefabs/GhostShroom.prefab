@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 7736840368445662783}
   - component: {fileID: 6399029439090032448}
   m_Layer: 0
-  m_Name: 'GhostShroom - Stalk '
+  m_Name: GhostShroom
   m_TagString: Shroom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
