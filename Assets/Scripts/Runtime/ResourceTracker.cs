@@ -26,7 +26,16 @@ namespace TeamShrimp.GGJ23
             return float.MinValue;
         }
 
-        public static bool Set(Resource resource, float value) => resources.TryAdd(resource, value);
+        public static bool Set(Resource resource, float value)
+        {
+            if (resources.TryAdd(resource, value))
+            {
+                OnResourceChangedEvent.Invoke(resource);
+                return true;
+            }
+
+            return false;
+        }
 
         public static bool Add(Resource resource, float toAdd)
         {

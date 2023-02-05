@@ -15,6 +15,8 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private bool pointyTop;
 
+        [SerializeField] private float maxZoom, minZoom, zoomSpeed;
+
         [SerializeField] private float TESTING_MAP_SIZE;
 
         private Vector3 _previousMousePosition;
@@ -95,6 +97,10 @@ namespace TeamShrimp.GGJ23
                 this._mouseChangeX = 0.0f;
                 this._mouseChangeY = 0.0f;
             }
+
+            float zoomFactor = Input.mouseScrollDelta.y;
+
+            MainCamera.orthographicSize = Mathf.Clamp(MainCamera.orthographicSize - (zoomFactor) * zoomSpeed * Time.deltaTime, minZoom, maxZoom);
 
             MainCamera.transform.position = new Vector3(
                 Mathf.Clamp(MainCamera.transform.position.x, -_mapWidth / 2, _mapWidth / 2),

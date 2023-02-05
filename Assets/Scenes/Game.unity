@@ -275,6 +275,9 @@ MonoBehaviour:
   mainCamera: {fileID: 292225751}
   cameraSmoothing: 10
   pointyTop: 0
+  maxZoom: 5
+  minZoom: 3
+  zoomSpeed: 50
   TESTING_MAP_SIZE: 5
 --- !u!1 &445787500
 GameObject:
