@@ -60,7 +60,7 @@ namespace TeamShrimp.GGJ23
 
         public void AddShroom(ShroomBase shroom)
         {
-            var pos = WorldToGridPos(shroom.WorldPosition);
+            var pos = WorldToGridPos(shroom.transform.position);
             shroomsByPosition.Add((Vector2Int) pos, shroom);
             groundTilemap.SetTileFlags(pos, TileFlags.None);
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
@@ -185,12 +185,12 @@ namespace TeamShrimp.GGJ23
 
             foreach (var (pos, structure) in map.StructuresByPosition)
             {
-                var go = Instantiate(structure.Type.Prefab, pos.To3(),
+                var worldPos = groundTilemap.CellToWorld(pos.To3Int());
+                var go = Instantiate(structure.Type.Prefab, worldPos,
                     Quaternion.identity);
                 go.TryGetComponent<ShroomBase>()
                     .Iter(shroom =>
                     {
-                        shroom.WorldPosition = pos.To3();
                         shroom.Owner = structure.Team;
                         AddShroom(shroom);
                     });

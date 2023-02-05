@@ -55,7 +55,7 @@ namespace TeamShrimp.GGJ23
         public void DrawSegments()
         {
             this._segments = this.map.GetLerpPathCubed(
-                this.map.WorldToGridPos(_start.WorldPosition), this.map.WorldToGridPos(_end.WorldPosition)
+                this.map.WorldToGridPos(_start.transform.position), this.map.WorldToGridPos(_end.transform.position)
             );
 
             this.line.positionCount = this._segments.Count;
