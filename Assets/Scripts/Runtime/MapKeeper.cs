@@ -127,7 +127,7 @@ namespace TeamShrimp.GGJ23
             checkedCubes.Add(cubedStart);
             cubedStart.CubeNeighbours().ToList()
                 .ForEach(cube => cubesToCheck.Push(cube));
-            
+
             Vector3Int cubeToCheck;
             while (cubesToCheck.TryPop(out cubeToCheck))
             {
@@ -194,7 +194,7 @@ namespace TeamShrimp.GGJ23
                 go.TryGetComponent<ShroomBase>()
                     .Iter(shroom =>
                     {
-                        shroom.Owner = structure.Team;
+                        structure.Team.Iter(it => shroom.Owner = it);
                         AddShroom(shroom);
                     });
             }
