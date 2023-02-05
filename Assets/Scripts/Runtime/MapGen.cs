@@ -60,6 +60,7 @@ namespace TeamShrimp.GGJ23
         }
 
         public record GenerationParams(
+            int Seed,
             int Size,
             TileType TileType,
             StructureType HomeStructure);
