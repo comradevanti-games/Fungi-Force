@@ -304,5 +304,13 @@ namespace TeamShrimp.GGJ23
             CheckForConnections(shroom);
             map.AddShroom(shroom);
         }
+
+        public void SwitchShroom(int i)
+        {
+            _selectedShroomPrefab.transform.Children().IterI((childI, child) =>
+            {
+                child.gameObject.SetActive(childI == i);
+            });
+        }
     }
 }
