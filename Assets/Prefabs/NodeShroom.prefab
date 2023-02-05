@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 180958770736005645}
   - component: {fileID: 5285528448583882392}
-  - component: {fileID: 5285528448583882471}
   - component: {fileID: 7024686166002033308}
   m_Layer: 0
   m_Name: ShroomBase
@@ -56,20 +55,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &5285528448583882471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705153810351675575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9f24197fd731f549bf1439b64c77b73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animator: {fileID: 5285528448583882392}
-  FPS: 5
 --- !u!114 &7024686166002033308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,7 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7087362849664570965}
   m_Layer: 0
-  m_Name: RealNodeShroom
+  m_Name: NodeShroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
