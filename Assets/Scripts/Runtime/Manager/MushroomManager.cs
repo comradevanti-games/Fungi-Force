@@ -42,9 +42,7 @@ namespace TeamShrimp.GGJ23
         {
             set => _selectedShroomPrefab = value;
         }
-
-        private MushroomManager() { }
-
+        
         void Awake()
         {
             Instance = this;
