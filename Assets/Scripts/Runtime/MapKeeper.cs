@@ -126,6 +126,7 @@ namespace TeamShrimp.GGJ23
             checkedCubes.Add(cubedStart);
             cubedStart.CubeNeighbours().ToList()
                 .ForEach(cube => cubesToCheck.Push(cube));
+            
             Vector3Int cubeToCheck;
             while (cubesToCheck.TryPop(out cubeToCheck))
             {

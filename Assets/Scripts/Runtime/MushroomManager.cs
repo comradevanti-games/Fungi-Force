@@ -206,7 +206,7 @@ namespace TeamShrimp.GGJ23
 
             Debug.Log("Checked for Connections");
 
-            placedShroom.Initialize(gameManager.CurrentTeam);
+            placedShroom.Initialize(gameManager.MyTeam);
             onShroomPlaced.Invoke();
 
             Debug.Log("Invoked Event");

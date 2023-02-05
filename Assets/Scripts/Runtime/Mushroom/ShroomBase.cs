@@ -83,6 +83,7 @@ namespace TeamShrimp.GGJ23
             this.Children = new List<ShroomBase>();
             this.transform.position = new Vector3(WorldPosition.x, WorldPosition.y, -3);
             _connector = GetComponent<LineRenderer>();
+            Debug.Log("Shroom initialized for " + owner);
             Owner = owner;
             // _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
