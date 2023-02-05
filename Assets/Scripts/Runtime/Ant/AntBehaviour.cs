@@ -105,7 +105,7 @@ namespace TeamShrimp.GGJ23
 
         public Vector3Int? FindClosebyMushroom(Vector3Int pos, OffsetRotation rotation)
         {
-            List<ShroomBase> sb = mapKeeper.AllShrooms.FindAll((ShroomBase b) => b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) <= 1);
+            List<ShroomBase> sb = mapKeeper.AllShrooms.ToList().FindAll((ShroomBase b) => b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) <= 1);
             if (sb.Count == 0)
             {
                 return null;
