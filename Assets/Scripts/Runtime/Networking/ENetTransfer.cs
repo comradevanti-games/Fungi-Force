@@ -142,6 +142,7 @@ namespace TeamShrimp.GGJ23.Networking
         
         public void Send(BaseCommand baseCommand, byte channelId = 0)
         {
+            Debug.Log("SENDING COMMAND OVER NETWORK: " + baseCommand);
             var p = default(Packet);
             
             p.Create(baseCommand.Buffer, PacketFlags.Reliable);

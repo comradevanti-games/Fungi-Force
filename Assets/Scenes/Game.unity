@@ -135769,5 +135769,4 @@ MonoBehaviour:
   antPrefab: {fileID: 2166259487027633511, guid: a0d4de13810f7284383da1945ba45ea1, type: 3}
   ants: []
   grid: {fileID: 1752550649}
-  baitPositions:
-  - {x: -2, y: 0, z: 2}
+  baitPositions: []
