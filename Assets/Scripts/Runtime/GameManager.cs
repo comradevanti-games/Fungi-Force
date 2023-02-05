@@ -3,6 +3,7 @@ using TeamShrimp.GGJ23.Networking;
 using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace TeamShrimp.GGJ23
 {
@@ -14,7 +15,8 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private Resource startResourceType;
         [SerializeField] private float startResourceValue;
-        private Team currentTeam = Team.Red;
+        
+        public Team currentTeam = Team.Red;
 
 
         public Team MyTeam => Blackboard.IsHost ? Team.Red : Team.Blue;

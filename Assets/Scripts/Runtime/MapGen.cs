@@ -59,6 +59,8 @@ namespace TeamShrimp.GGJ23
 
         public static Map GenerateMap(GenerationParams genParams)
         {
+            var groundTileType = genParams.TileTypesByName["Forest"];
+
             return WithSeededRandom(genParams.Seed, () =>
             {
                 Vector2Int GenerateFreeTeamPosition(Map map, Team team) =>
@@ -69,26 +71,44 @@ namespace TeamShrimp.GGJ23
                             !map.StructuresByPosition.ContainsKey(it))
                         // Is on the correct side
                         .Where(it => IsOnTeamSide(it, team))
-                        .ToArray()
+                        // Is not water
+                        .Where(it =>
+                            map.TilesByPosition[it].Type.name != "Water")
                         // Take a random one
-                        .Then(possible =>
-                            possible[Random.Range(0, possible.Length)]);
+                        .Random();
+
+                TileType ChooseTileType() =>
+                    genParams.TileTypesByName.Values.WeightedRandom(it =>
+                        it.Weight);
+
+                Tile GenerateTileOfType(TileType type)
+                {
+                    var variantCount = type.Variants.Count();
+                    var variantIndex = Random.Range(0, variantCount);
+                    return new Tile(type, variantIndex);
+                }
 
                 Map GenerateTileAt(Map map, Vector2Int pos)
                 {
-                    var variantCount =
-                        genParams.TileType.Variants.Count();
-                    var variantIndex = Random.Range(0, variantCount);
-                    var tile = new Tile(genParams.TileType,
-                        variantIndex);
+                    var tileType = ChooseTileType();
+                    var tile = GenerateTileOfType(tileType);
+                    return PlaceTileAt(map, pos, tile);
+                }
+
+                Map PlaceGroundAt(Map map, Vector2Int pos)
+                {
+                    var tile = GenerateTileOfType(groundTileType);
                     return PlaceTileAt(map, pos, tile);
                 }
 
                 Map PlaceHome(Map map, Team team)
                 {
                     var homePos = HomePosition(team, genParams.Size);
-                    return PlaceStructureAt(map, homePos,
-                        new Structure(genParams.HomeStructure, Opt.Some(team)));
+                    var home = new Structure(genParams.HomeStructure,
+                        Opt.Some(team));
+                    return map
+                        .Then(it => PlaceGroundAt(it, homePos))
+                        .Then(it => PlaceStructureAt(it, homePos, home));
                 }
 
                 Map PlaceTeamTree(Map map, Team team)
@@ -128,7 +148,7 @@ namespace TeamShrimp.GGJ23
         public record GenerationParams(
             int Seed,
             int Size,
-            TileType TileType,
+            IReadOnlyDictionary<string, TileType> TileTypesByName,
             StructureType HomeStructure,
             StructureType TreeStructure);
 
