@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
-using System.ComponentModel;
-using System.Resources;
 using TeamShrimp.GGJ23.Networking;
 using TeamShrimp.GGJ23.Runtime;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,11 +14,22 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private Resource startResourceType;
         [SerializeField] private float startResourceValue;
+        private Team currentTeam = Team.Red;
 
 
         public Team MyTeam => Blackboard.IsHost ? Team.Red : Team.Blue;
-        
-        public Team CurrentTeam { get; private set; } = Team.Red;
+
+        public Team OpponentTeam => Blackboard.IsHost ? Team.Blue : Team.Red;
+
+        public Team CurrentTeam
+        {
+            get => currentTeam;
+            private set
+            {
+                currentTeam = value;
+                onTeamChanged.Invoke(value);
+            }
+        }
 
         public bool IsMyTurn => CurrentTeam == MyTeam;
 
@@ -34,6 +41,7 @@ namespace TeamShrimp.GGJ23
                 yield return new WaitForSeconds(2); // Wait for map to generate
                 StartGame();
             }
+
             StartCoroutine(WaitAndStart());
         }
 
@@ -51,44 +59,42 @@ namespace TeamShrimp.GGJ23
 
         public void OnPlayerAction()
         {
-            EndRound();
+            EndMyRound();
         }
 
         private void StartGame()
         {
             Debug.Log("Start game");
             ResourceTracker.Set(startResourceType, startResourceValue);
-            Debug.Log("Player starts with " + ResourceTracker.ResourceToString(startResourceType));
+            Debug.Log("Player starts with " +
+                      ResourceTracker.ResourceToString(startResourceType));
             onGameStarted.Invoke();
-            onTeamChanged.Invoke(CurrentTeam);
 
             if (Blackboard.IsHost)
-                StartRound();
+                StartMyRound();
+            else
+                StartOpponentTurn();
+        }
+
+        private void StartOpponentTurn()
+        {
+            CurrentTeam = OpponentTeam;
         }
 
         private void EndOpponentRound()
         {
-            SwitchTeam();
-            StartRound();
+            StartMyRound();
         }
 
-        private void StartRound()
+        private void StartMyRound()
         {
-            Debug.Log($"Round started for {CurrentTeam}");
+            CurrentTeam = MyTeam;
             onRoundStarted.Invoke();
         }
 
-        private void EndRound()
+        private void EndMyRound()
         {
-            Debug.Log($"Round ended for{CurrentTeam}");
-            SwitchTeam();
-        }
-
-        private void SwitchTeam()
-        {
-            Debug.Log("Switched team");
-            CurrentTeam = CurrentTeam == Team.Red ? Team.Blue : Team.Red;
-            onTeamChanged.Invoke(CurrentTeam);
+            StartOpponentTurn();
         }
     }
 }
