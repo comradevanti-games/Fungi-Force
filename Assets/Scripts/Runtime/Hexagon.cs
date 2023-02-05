@@ -45,5 +45,9 @@ namespace TeamShrimp.GGJ23
             var (minX, maxX) = RowStartStop(pos.y, size);
             return pos.x >= minX && pos.x <= maxX;
         }
+
+        public static float Area(int size) =>
+            // https://www.math.net/area-of-a-hexagon
+            3f * Mathf.Sqrt(3) / 2f * (size * size);
     }
 }

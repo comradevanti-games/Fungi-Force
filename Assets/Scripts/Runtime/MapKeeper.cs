@@ -37,6 +37,9 @@ namespace TeamShrimp.GGJ23
 
         public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
+        public float MapArea => Hexagon.Area(mapSize);
+
+
         private void Awake()
         {
             if (debug)
@@ -278,5 +281,9 @@ namespace TeamShrimp.GGJ23
             if (structureTypesByName.Count == 0)
                 Debug.LogWarning("No structure-types found in resources!");
         }
+
+        public int MapCoverageOf(Team team) =>
+            // TODO: Count number of tiles covered by shrooms or roots
+            0;
     }
 }

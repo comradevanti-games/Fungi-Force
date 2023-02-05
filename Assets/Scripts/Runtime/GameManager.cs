@@ -3,7 +3,6 @@ using TeamShrimp.GGJ23.Networking;
 using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 namespace TeamShrimp.GGJ23
 {
@@ -12,10 +11,10 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private UnityEvent onGameStarted;
         [SerializeField] private UnityEvent onRoundStarted;
         [SerializeField] private UnityEvent<Team> onTeamChanged;
-
+        [SerializeField] private MapKeeper mapKeeper;
         [SerializeField] private Resource startResourceType;
         [SerializeField] private float startResourceValue;
-        
+
         public Team currentTeam = Team.Red;
 
 
@@ -35,6 +34,8 @@ namespace TeamShrimp.GGJ23
 
         public bool IsMyTurn => CurrentTeam == MyTeam;
 
+        private float WinCoverage => mapKeeper.MapArea * 0.5f;
+
 
         private void Start()
         {
@@ -46,7 +47,7 @@ namespace TeamShrimp.GGJ23
 
             StartCoroutine(WaitAndStart());
         }
-        
+
         public void OnNetworkCommand(BaseCommand cmd)
         {
             switch (cmd)
@@ -95,7 +96,11 @@ namespace TeamShrimp.GGJ23
 
         private void EndMyRound()
         {
-            StartOpponentTurn();
+            if (mapKeeper.MapCoverageOf(MyTeam) >= WinCoverage)
+                // TODO: Do win
+                Debug.Log(MyTeam + " won");
+            else
+                StartOpponentTurn();
         }
     }
 }
