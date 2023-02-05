@@ -46,8 +46,18 @@ namespace TeamShrimp.GGJ23
             return pos.x >= minX && pos.x <= maxX;
         }
 
-        public static float Area(int size) =>
-            // https://www.math.net/area-of-a-hexagon
-            3f * Mathf.Sqrt(3) / 2f * (size * size);
+        public static int TileCount(int size)
+        {
+            var sum = 0;
+            var (minY, maxY) = ColumnStartStop(size);
+            for (var y = minY; y <= maxY; y++)
+            {
+                var (minX, maxX) = RowStartStop(y, size);
+                for (var x = minX; x <= maxX; x++)
+                    sum++;
+            }
+
+            return sum;
+        }
     }
 }

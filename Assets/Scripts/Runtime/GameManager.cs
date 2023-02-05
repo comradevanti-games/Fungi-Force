@@ -34,7 +34,7 @@ namespace TeamShrimp.GGJ23
 
         public bool IsMyTurn => CurrentTeam == MyTeam;
 
-        private float WinCoverage => mapKeeper.MapArea * 0.5f;
+        private float WinCoverage => mapKeeper.MapTileCount * 0.5f;
 
 
         private void Start()

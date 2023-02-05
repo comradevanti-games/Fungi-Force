@@ -37,7 +37,7 @@ namespace TeamShrimp.GGJ23
 
         public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
-        public float MapArea => Hexagon.Area(mapSize);
+        public float MapTileCount => Hexagon.TileCount(mapSize);
 
 
         private void Awake()
