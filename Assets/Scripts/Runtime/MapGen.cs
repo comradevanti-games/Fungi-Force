@@ -65,25 +65,17 @@ namespace TeamShrimp.GGJ23
                     return PlaceTileAt(map, pos, tile);
                 }
 
+                Map PlaceHome(Map map, Team team)
+                {
+                    var homePos = HomePosition(team, genParams.Size);
+                    return PlaceStructureAt(map, homePos,
+                        new Structure(genParams.HomeStructure, team));
+                }
+
                 return PositionsInMapOfSize(genParams.Size)
                     .Aggregate(EmptyMap, GenerateTileAt)
-                    // Add red home
-                    .Then(map =>
-                    {
-                        var homePos = HomePosition(Team.Red, genParams.Size);
-                        return PlaceStructureAt(map, homePos,
-                            new Structure(genParams.HomeStructure,
-                                Team.Red));
-                    })
-                    // Add blue home
-                    .Then(map =>
-                    {
-                        var homePos =
-                            HomePosition(Team.Blue, genParams.Size);
-                        return PlaceStructureAt(map, homePos,
-                            new Structure(genParams.HomeStructure,
-                                Team.Blue));
-                    });
+                    .Then(map => PlaceHome(map, Team.Red))
+                    .Then(map => PlaceHome(map, Team.Blue));
             });
         }
 
