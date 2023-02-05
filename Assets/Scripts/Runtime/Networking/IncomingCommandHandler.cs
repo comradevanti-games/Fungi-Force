@@ -25,7 +25,8 @@ namespace TeamShrimp.GGJ23.Networking
                 {CommandType.PLACE, HandleCommandType<PlaceCommand>},
                 {CommandType.CUT, HandleCommandType<CutCommand>},
                 {CommandType.WORLD_INIT, HandleCommandType<WorldInitCommand>},
-                {CommandType.CONNECT, HandleCommandType<ConnectionInitCommand>}
+                {CommandType.CONNECT, HandleCommandType<ConnectionInitCommand>},
+                {CommandType.WIN, HandleCommandType<WinCommand>}
             };
             // Register(CommandType.READY, HandleCommandType<ReadyCommand>);
             // Register(CommandType.PLACE, HandleCommandType<PlaceCommand>);
