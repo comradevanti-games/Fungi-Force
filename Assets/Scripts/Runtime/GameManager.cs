@@ -26,7 +26,6 @@ namespace TeamShrimp.GGJ23
                 yield return new WaitForSeconds(2); // Wait for map to generate
                 StartGame();
             }
-
             StartCoroutine(WaitAndStart());
         }
 

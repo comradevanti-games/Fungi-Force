@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,7 +24,7 @@ namespace TeamShrimp.GGJ23
         private List<ShroomBase> _children;
         
         private LineRenderer _connector;
-
+        
         public ShroomType ShroomType
         {
             get => _shroomType;
@@ -90,6 +89,18 @@ namespace TeamShrimp.GGJ23
             //{
             //    _connector.SetPosition(1, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
             //}
+        }
+        
+
+        public void OnDestroy()
+        {
+            try
+            {
+                MushroomManager.Instance.RemoveAllShroomConnectionsInvolving(this);
+                MushroomManager.Instance.RemoveMushroom(this);
+            }
+            catch(Exception e)
+            {}
         }
 
         public abstract void Start();

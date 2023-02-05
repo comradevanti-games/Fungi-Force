@@ -25,7 +25,7 @@ namespace TeamShrimp.GGJ23.Runtime.Util
             }
             return new Vector3Int(x, y, z);
         }
-
+        
         public static int CubeDistance(this Vector3Int self, Vector3Int other)
         {
             var vec = self-other;

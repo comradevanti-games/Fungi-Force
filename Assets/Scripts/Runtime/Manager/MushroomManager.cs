@@ -138,6 +138,39 @@ namespace TeamShrimp.GGJ23
 
             return map.AllShrooms.Max(shroom => shroom.ShroomId) + 1;
         }
+        
+        
+        
+        public List<ShroomConnection> FindAllShroomConnectionsInvolving(ShroomBase shroomBase)
+        {
+            return _shroomConnections.FindAll((connection =>
+                shroomBase.ShroomId == connection.StartShroom.ShroomId ||
+                shroomBase.ShroomId == connection.EndShroom.ShroomId));
+        }
+
+        public void KillConnection(ShroomConnection mushroomConnnection)
+        {
+            _shroomConnections.Remove(mushroomConnnection);
+            Destroy(mushroomConnnection);
+        }
+        public int RemoveAllShroomConnectionsInvolving(ShroomBase shroomBase)
+        {
+            int i = 0;
+            foreach (var shroomConnection in _shroomConnections.Where((connection =>
+                         shroomBase.ShroomId == connection.StartShroom.ShroomId ||
+                         shroomBase.ShroomId == connection.EndShroom.ShroomId)))
+            {
+                KillConnection(shroomConnection);
+                i++;
+            }
+
+            return i;
+        }
+        public void RemoveMushroom(ShroomBase shroomBase)
+        {
+            map.AllShrooms.Remove(shroomBase);
+            map.RemoveAtPosition(shroomBase.ShroomPosition);
+        }
 
         public ShroomBase PlaceMushroom(Vector2Int gridPosition)
         {
