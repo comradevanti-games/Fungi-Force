@@ -37,6 +37,9 @@ namespace TeamShrimp.GGJ23
 
         public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
+        public float MapTileCount => Hexagon.TileCount(mapSize);
+
+
         private void Awake()
         {
             if (debug)
@@ -277,6 +280,33 @@ namespace TeamShrimp.GGJ23
                 .ToDictionary(t => t.name, t => t);
             if (structureTypesByName.Count == 0)
                 Debug.LogWarning("No structure-types found in resources!");
+        }
+
+        public int MapCoverageOf(Team team)
+        {
+            List<ShroomConnection> toCheck = MushroomManager.Instance.GetAllConnectionsOfOwner(team);
+            List<long> idsChecked = new List<long>();
+
+            int count = 0;
+            foreach (ShroomConnection connection in toCheck)
+            {
+                Vector3Int start = WorldToGridPos(connection.StartShroom.ShroomPosition);
+                Vector3Int end = WorldToGridPos(connection.EndShroom.ShroomPosition);
+
+                foreach (Vector3Int segment in connection.Segments)
+                {
+                    if (start.Equals(segment) || end.Equals(segment))
+                        continue;
+                    count++;
+                }
+                
+                if (!idsChecked.Contains(connection.StartShroom.ShroomId))
+                    idsChecked.Add(connection.StartShroom.ShroomId);
+                if (!idsChecked.Contains(connection.EndShroom.ShroomId))
+                    idsChecked.Add(connection.EndShroom.ShroomId);
+            }
+            
+            return count + idsChecked.Count;
         }
     }
 }

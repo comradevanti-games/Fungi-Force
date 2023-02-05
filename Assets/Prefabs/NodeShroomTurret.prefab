@@ -72,32 +72,5 @@ PrefabInstance:
     - {fileID: 6412417332915636141, guid: c6dad22c992a8cd4e8ce6076829120f0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6754833428048271672, guid: c6dad22c992a8cd4e8ce6076829120f0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8293240619281453362}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6dad22c992a8cd4e8ce6076829120f0, type: 3}
---- !u!1 &5734612636058952918 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6754833428048271672, guid: c6dad22c992a8cd4e8ce6076829120f0, type: 3}
-  m_PrefabInstance: {fileID: 1308457294106918382}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8293240619281453362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5734612636058952918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68584e43b1caca244b40a6c37ab4460d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _shroomType: {fileID: 11400000, guid: 59fc54b3ba3f5f342948b52321810670, type: 2}
-  _costsResource: 0
-  _price: 5
-  baitPrefab: {fileID: 919132149155446097, guid: 1c7762c9bce5f4ab7b060decb9e3002d, type: 3}
-  shootDistance: 3
-  shootDirection: -1
-  cooldown: 3

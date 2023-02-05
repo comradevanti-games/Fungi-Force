@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
 using TeamShrimp.GGJ23.Networking;
@@ -251,6 +252,8 @@ namespace TeamShrimp.GGJ23
             Debug.Log(placedShroom);
 
             CheckForConnections(placedShroom);
+            
+            BreakConnections(gameManager.MyTeam == Team.Red ? Team.Blue : Team.Red);
 
             Debug.Log("Checked for Connections");
             
@@ -269,6 +272,35 @@ namespace TeamShrimp.GGJ23
             }
 
             return placedShroom;
+        }
+
+        private List<Vector3Int> AllSegments(List<ShroomConnection> connections)
+        {
+            List<Vector3Int> all = new List<Vector3Int>();
+            connections.ForEach(conn => all.AddRange(conn.Segments));
+            return all;
+        }
+
+        private ShroomConnection GetConnectionBySegment(Vector3Int segment) =>
+            _shroomConnections.Find(conn => conn.Segments.Contains(segment));
+
+        private void BreakConnections(Team team)
+        {
+            List<ShroomConnection> toCheck = GetAllConnectionsOfOwner(team);
+            foreach (Vector3Int segment in AllSegments(toCheck))
+            {
+                IOpt<ShroomBase> result = map.TryFindShroom((Vector2Int) segment);
+                result.Iter(shroom =>
+                {
+                    if (shroom.Owner != team)
+                    {
+                        ShroomConnection toBreak = GetConnectionBySegment(segment);
+                        _shroomConnections.Remove(toBreak);
+                        toCheck.Remove(toBreak);
+                        Destroy(toBreak.gameObject);
+                    }
+                });
+            }
         }
 
         private void ConnectShrooms(ShroomBase start, ShroomBase end)
@@ -307,6 +339,11 @@ namespace TeamShrimp.GGJ23
         public Vector3 GetWorldPositionForShroomPosition(
             Vector2Int shroomPosition) => map.GridToWorldPos(shroomPosition);
 
+        public List<ShroomConnection> GetAllConnectionsOfOwner(Team team)
+        {
+            return _shroomConnections.FindAll(conn => conn.StartShroom.Owner == team);
+        }
+        
         public void CheckForConnections(ShroomBase placedShroom)
         {
             var shroomsToCheck =
@@ -351,6 +388,7 @@ namespace TeamShrimp.GGJ23
             shroom.Parent = GetMushroomAtPosition(parentPosition);
             shroom.Initialize(Blackboard.IsHost ? Team.Blue : Team.Red);
             CheckForConnections(shroom);
+            BreakConnections(gameManager.MyTeam);
             map.AddShroom(shroom);
         }
 
@@ -362,11 +400,24 @@ namespace TeamShrimp.GGJ23
             });
         }
 
+        public void HandleTurnChange(Team team)
+        {
+            Debug.Log("HandleTurnChange(" + team + ")");
+            ShootBait(team);
+            AssignResources(team);
+        }
+        
+        public void ShootBait(Team team)
+        {
+            List<ShroomBase> ownedTurretShrooms =
+                map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("TurretShroom"), team);
+            ownedTurretShrooms.ForEach(ownedTurret => ((TurretShroom) ownedTurret).ShootBait(map));
+        }
+        
         public void AssignResources(Team team)
         {
             if (team != gameManager.MyTeam)
                 return;
-
             List<ShroomBase> ownedPowerShrooms =
                 map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("PowerShroom"), team);
             if (ResourceTracker.Add(Resource.SPORE, ownedPowerShrooms.Count))
