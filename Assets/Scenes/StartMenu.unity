@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4732,9 +4732,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1197012275}
   - component: {fileID: 1197012276}
-  - component: {fileID: 1197012277}
   - component: {fileID: 1197012279}
   - component: {fileID: 1197012278}
+  - component: {fileID: 1197012280}
   m_Layer: 0
   m_Name: Lobby
   m_TagString: Untagged
@@ -4790,22 +4790,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1197012277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197012274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04b66e478419b724b91b0e774a9e7e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkManager: {fileID: 1197012278}
-  mapSizeInput: {fileID: 1604977081}
-  mapSeedInput: {fileID: 994456091}
-  hostNameInput: {fileID: 717281773}
 --- !u!114 &1197012278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4838,7 +4822,7 @@ MonoBehaviour:
     subscribers:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1197012277}
+        - m_Target: {fileID: 1197012280}
           m_TargetAssemblyTypeName: TeamShrimp.GGJ23.LobbyKeeper, TeamShrimp.GGJ23
           m_MethodName: OnConnectCommand
           m_Mode: 0
@@ -4850,6 +4834,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+--- !u!114 &1197012280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197012274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b66e478419b724b91b0e774a9e7e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkManager: {fileID: 1197012278}
+  mapSizeInput: {fileID: 1604977081}
+  mapSeedInput: {fileID: 994456091}
+  hostNameInput: {fileID: 717281773}
 --- !u!1 &1272579853
 GameObject:
   m_ObjectHideFlags: 0
