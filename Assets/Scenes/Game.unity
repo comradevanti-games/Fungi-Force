@@ -1298,6 +1298,7 @@ MonoBehaviour:
   debug: 1
   cellLength: 0.5
   initialPrefab: {fileID: 7087362849664570954, guid: c6dad22c992a8cd4e8ce6076829120f0, type: 3}
+  gameManager: {fileID: 2121146359}
   ghostShroom: {fileID: 1393869277}
   networkManager: {fileID: 2121146360}
   maxDistanceAllowed: 2

@@ -28,6 +28,7 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private GameObject initialPrefab;
 
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private GhostShroom ghostShroom;
         [SerializeField] private NetworkManager networkManager;
 
@@ -194,7 +195,7 @@ namespace TeamShrimp.GGJ23
             
             Debug.Log("Checked for Connections");
             
-            placedShroom.Initialize(Blackboard.IsHost ? Team.Red : Team.Blue);
+            placedShroom.Initialize(gameManager.CurrentTeam);
             onShroomPlaced.Invoke();
             
             Debug.Log("Invoked Event");
