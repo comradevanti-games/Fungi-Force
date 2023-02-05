@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -21,6 +20,9 @@ namespace TeamShrimp.GGJ23
             gameObjectsByPosition =
                 new Dictionary<Vector2Int, GameObject>();
 
+        private readonly HashSet<Vector2Int> groundPositions =
+            new HashSet<Vector2Int>();
+
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
             new Dictionary<Vector2Int, ShroomBase>();
 
@@ -32,7 +34,6 @@ namespace TeamShrimp.GGJ23
 
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
-        private HashSet<Vector2Int> groundPositions = new HashSet<Vector2Int>();
 
         public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
@@ -76,9 +77,11 @@ namespace TeamShrimp.GGJ23
         public IOpt<GameObject> TryFindObject(Vector2Int pos) =>
             gameObjectsByPosition.TryGet(pos);
 
-        public List<ShroomBase> FindAllShroomsOfTypeAndOwner(StructureType type, Team owner)
+        public List<ShroomBase> FindAllShroomsOfTypeAndOwner(
+            StructureType type, Team owner)
         {
-            return AllShrooms.Where(shroom => shroom.ShroomType == type && shroom.Owner == owner).ToList();
+            return AllShrooms.Where(shroom =>
+                shroom.ShroomType == type && shroom.Owner == owner).ToList();
         }
 
         public void AddShroom(ShroomBase shroom)
@@ -109,8 +112,16 @@ namespace TeamShrimp.GGJ23
         public bool IsFreeAt(Vector2Int position) =>
             !structuresByPosition.ContainsKey(position);
 
+        public bool HasTreeAt(Vector2Int position)
+        {
+            return structuresByPosition
+                .TryGet(position)
+                .Exists(it => it.Type.name == "Tree");
+        }
+
         public bool CanPlace(StructureType type, Vector2Int pos) =>
-            IsInMap(pos) && HasGroundAt(pos) && IsFreeAt(pos);
+            IsInMap(pos) && HasGroundAt(pos) &&
+            (HasTreeAt(pos) || IsFreeAt(pos));
 
         public Vector3 SnapToGridPos(Vector3 worldPos)
         {
