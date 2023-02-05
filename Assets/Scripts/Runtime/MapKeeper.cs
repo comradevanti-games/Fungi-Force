@@ -14,9 +14,6 @@ namespace TeamShrimp.GGJ23
         private const string StructureTypeResourcePath = "StructureTypes";
 
         [SerializeField] private Tilemap groundTilemap;
-
-        public string dictAsString = "";
-
         [SerializeField] private bool debug;
 
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
@@ -66,7 +63,8 @@ namespace TeamShrimp.GGJ23
         {
             var pos = WorldToGridPos(shroom.WorldPosition);
             shroomsByPosition.Add((Vector2Int) pos, shroom);
-            dictAsString += "'" + pos + "': " + shroom + "\n";
+            groundTilemap.SetTileFlags(pos, TileFlags.None);
+            groundTilemap.SetColor(pos, shroom.Owner.ToColor());
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>

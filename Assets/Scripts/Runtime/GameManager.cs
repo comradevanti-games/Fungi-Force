@@ -19,7 +19,9 @@ namespace TeamShrimp.GGJ23
         [SerializeField] private Resource startResourceType;
         [SerializeField] private float startResourceValue;
 
-        private Team currentTeam = Team.Red;
+
+        public Team CurrentTeam { get; private set; } = Team.Red;
+
 
         private void Start()
         {
@@ -54,7 +56,7 @@ namespace TeamShrimp.GGJ23
             ResourceTracker.Set(startResourceType, startResourceValue);
             Debug.Log("Player starts with " + ResourceTracker.ResourceToString(startResourceType));
             onGameStarted.Invoke();
-            onTeamChanged.Invoke(currentTeam);
+            onTeamChanged.Invoke(CurrentTeam);
 
             if (Blackboard.IsHost)
                 StartRound();
@@ -68,21 +70,21 @@ namespace TeamShrimp.GGJ23
 
         private void StartRound()
         {
-            Debug.Log($"Round started for {currentTeam}");
+            Debug.Log($"Round started for {CurrentTeam}");
             onRoundStarted.Invoke();
         }
 
         private void EndRound()
         {
-            Debug.Log($"Round ended for{currentTeam}");
+            Debug.Log($"Round ended for{CurrentTeam}");
             SwitchTeam();
         }
 
         private void SwitchTeam()
         {
             Debug.Log("Switched team");
-            currentTeam = currentTeam == Team.Red ? Team.Blue : Team.Red;
-            onTeamChanged.Invoke(currentTeam);
+            CurrentTeam = CurrentTeam == Team.Red ? Team.Blue : Team.Red;
+            onTeamChanged.Invoke(CurrentTeam);
         }
     }
 }
