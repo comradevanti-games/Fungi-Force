@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &180958770736005645
 Transform:
   m_ObjectHideFlags: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shroomType: {fileID: 11400000, guid: cf6953fa0b74645459483eeaaf058d5c, type: 2}
+  _shroomType: {fileID: 11400000, guid: 59fc54b3ba3f5f342948b52321810670, type: 2}
   _costsResource: 0
   _price: 1
 --- !u!1001 &6604242410535157392
@@ -486,6 +486,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerShroom
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc76b5ce37501c04fbe5c62bd9734dc8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -511,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shroomType: {fileID: 11400000, guid: cf6953fa0b74645459483eeaaf058d5c, type: 2}
+  _shroomType: {fileID: 11400000, guid: e5c72c4871c77dd49a02192b9025b682, type: 2}
   _costsResource: 0
   _price: 1
 --- !u!4 &6641756144878033275 stripped
