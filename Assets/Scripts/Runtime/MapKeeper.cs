@@ -118,7 +118,7 @@ namespace TeamShrimp.GGJ23
             return results;
         }
 
-        public List<ShroomBase> FindShroomsInRange(ShroomBase root, float distance)
+        public List<ShroomBase> FindOwnedShroomsInRange(ShroomBase root, float distance)
         {
             List<ShroomBase> result = new List<ShroomBase>();
             Vector3Int cubedStart = root.ShroomPosition.To3Int().OffsetToCube();
@@ -140,7 +140,11 @@ namespace TeamShrimp.GGJ23
 
                 cubeToCheck = cubeToCheck.CubeToOffset();
                 IOpt<ShroomBase> shroom = TryFindShroom((Vector2Int) cubeToCheck);
-                shroom.Iter(value => result.Add(value));
+                shroom.Iter(value =>
+                {
+                    if (value.Owner == root.Owner)
+                        result.Add(value);
+                });
             }
 
             return result;
@@ -177,6 +181,7 @@ namespace TeamShrimp.GGJ23
                     .Iter(shroom =>
                     {
                         shroom.WorldPosition = pos.To3();
+                        shroom.Owner = structure.Team;
                         AddShroom(shroom);
                     });
             }

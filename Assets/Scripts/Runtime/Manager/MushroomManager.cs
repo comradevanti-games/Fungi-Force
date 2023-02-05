@@ -59,7 +59,7 @@ namespace TeamShrimp.GGJ23
             
             foreach (ShroomBase shroom in existingShrooms)
             {
-                shroom.Initialize();
+                shroom.Initialize(shroom.Owner);
             }
             
             _selectedShroomPrefab = initialPrefab;
@@ -159,7 +159,7 @@ namespace TeamShrimp.GGJ23
             
             Debug.Log("Checked for Connections");
             
-            placedShroom.Initialize();
+            placedShroom.Initialize(Blackboard.IsHost ? Team.Red : Team.Blue);
             onShroomPlaced.Invoke();
             
             Debug.Log("Invoked Event");
@@ -214,7 +214,7 @@ namespace TeamShrimp.GGJ23
 
         public void CheckForConnections(ShroomBase placedShroom)
         {
-            List<ShroomBase> shroomsToCheck = map.FindShroomsInRange(placedShroom, maxDistanceAllowed);
+            List<ShroomBase> shroomsToCheck = map.FindOwnedShroomsInRange(placedShroom, maxDistanceAllowed);
             shroomsToCheck.ForEach(shroom =>
             {
                 if (!ConnectionExists(placedShroom, shroom))
@@ -248,7 +248,9 @@ namespace TeamShrimp.GGJ23
             ShroomBase shroom = Instantiate(mushtype.Prefab).GetComponentInChildren<ShroomBase>();
             shroom.WorldPosition = GetWorldPositionForShroomPosition(shroomPosition);
             shroom.Parent = GetMushroomAtPosition(parentPosition);
-            shroom.Initialize();
+            shroom.Initialize(Blackboard.IsHost ? Team.Blue : Team.Red);
+            CheckForConnections(shroom);
+            map.AddShroom(shroom);
         }
     }
 }

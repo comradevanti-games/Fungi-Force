@@ -55,6 +55,8 @@ namespace TeamShrimp.GGJ23
 
         public bool IsOfType(ShroomType shroomType) => _shroomType.name == shroomType.name;
 
+        public Team Owner { get; set; }
+        
         public void ConnectChild(ShroomBase shroom)
         {
             this.Children.Add(shroom);
@@ -63,12 +65,13 @@ namespace TeamShrimp.GGJ23
         }
 
         // Feel free to override this method for specific Shrooms
-        public void Initialize()
+        public void Initialize(Team owner)
         {
             this._shroomId = MushroomManager.Instance.GenerateUniqueId();
             this.Children = new List<ShroomBase>();
             this.transform.position = new Vector3(WorldPosition.x, WorldPosition.y, -3);
             _connector = GetComponent<LineRenderer>();
+            Owner = owner;
             // _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
             //if (Parent != null)
