@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f29c2cc9bf47fb14ea6d100d7225cab7, type: 3}
   m_Name: PowerShroom
   m_EditorClassIdentifier: 
-  prefab: {fileID: 919132149155446097, guid: bc76b5ce37501c04fbe5c62bd9734dc8, type: 3}
+  prefab: {fileID: 4070717322952173151, guid: 7fdab3ebaf83136418dc6244bf442c03, type: 3}

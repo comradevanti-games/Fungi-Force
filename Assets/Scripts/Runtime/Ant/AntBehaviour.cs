@@ -93,11 +93,13 @@ namespace TeamShrimp.GGJ23
             lr = GetComponent<LineRenderer>();
         }
 
-        public void Initialize(Vector3Int cubeStartPosition, OffsetRotation offsetRotationInit)
+        public void Initialize(Vector3Int cubeStartPosition, OffsetRotation offsetRotationInit, MapKeeper mapKeeper, MushroomManager mushroomManager, Grid grid)
         {
             anthillPosition = cubeStartPosition;
             this.offsetRotation = offsetRotationInit;
-            
+            this.mapKeeper = mapKeeper;
+            this.mushroomManager = mushroomManager;
+            this.grid = grid;
             pathCreator = PathCreator(new AntBehaviourPredictionState()
             {
                 cubePos = anthillPosition,
@@ -106,6 +108,7 @@ namespace TeamShrimp.GGJ23
             mapSize = Blackboard.Game.MapSize;
             
             patheveryframe = CreatePathEveryFrame(pathCreator);
+            
             Debug.Log("INITIALIZED ANT");
             //InvokeRepeating(nameof(Turn), 1f, 1f);
         }
@@ -158,7 +161,8 @@ namespace TeamShrimp.GGJ23
         {
             Vector3 newPos = grid.CellToWorld(currentCubePosition.CubeToOffset());
             IEnumerator ienum = AnimatePositionTo(transform.position, newPos, 0.2f, 5);
-            IEnumerator ienum2 = AnimateScaleTo(transform.localScale, new Vector3(transform.position.x < newPos.x ? -0.1f : 0.1f,0.1f, 0.1f), 0.2f, 3);
+            float usualXScale = Mathf.Abs(transform.localScale.x);
+            IEnumerator ienum2 = AnimateScaleTo(transform.localScale, new Vector3(transform.position.x < newPos.x ? -usualXScale : usualXScale,usualXScale, 0.1f), 0.2f, 3);
             StartCoroutine(ienum2);
             StartCoroutine(ienum);
         }
