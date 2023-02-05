@@ -63,7 +63,7 @@ namespace TeamShrimp.GGJ23
             foreach (Vector3Int segment in _segments)
             {
                 Vector3 worldPos = map.GridToWorldPos(segment.CubeToOffset());
-                worldPos.z = -1f;
+                worldPos.z = 1f;
                 worldPositions.Add(worldPos);
             }
             this.line.SetPositions(worldPositions.ToArray());

@@ -57,7 +57,7 @@ namespace TeamShrimp.GGJ23
             {
                 // --Debug.Log("Strategic View");
                 var color = groundTilemap.color;
-                color.a = color.a < 1 ? 1 : 0.25f;
+                color.a = color.a < 0.95f ? 0.95f : 0.25f;
                 groundTilemap.color = color;
             }
         }
