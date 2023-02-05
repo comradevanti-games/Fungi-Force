@@ -66,7 +66,7 @@ namespace TeamShrimp.GGJ23
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
         }
 
-        public bool CanPlace(ShroomType type, Vector2Int pos) =>
+        public bool CanPlace(StructureType type, Vector2Int pos) =>
             TryFindShroom(pos).IsNone();
 
         public Vector3 SnapToGridPos(Vector3 worldPos)

@@ -14,7 +14,7 @@ namespace TeamShrimp.GGJ23
 
         // private Vector2Int _shroomPosition;
 
-        [SerializeField] private ShroomType _shroomType;
+        [SerializeField] private StructureType _shroomType;
 
         [SerializeField] private Resource _costsResource;
 
@@ -26,7 +26,7 @@ namespace TeamShrimp.GGJ23
         
         private LineRenderer _connector;
         
-        public ShroomType ShroomType
+        public StructureType ShroomType
         {
             get => _shroomType;
             set => _shroomType = value;
@@ -58,7 +58,7 @@ namespace TeamShrimp.GGJ23
             set => _connector = value;
         }
 
-        public bool IsOfType(ShroomType shroomType) => _shroomType.name == shroomType.name;
+        public bool IsOfType(StructureType shroomType) => _shroomType.name == shroomType.name;
 
         public Team Owner { get; set; }
 
