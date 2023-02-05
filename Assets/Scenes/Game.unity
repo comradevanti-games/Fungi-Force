@@ -134627,7 +134627,7 @@ Tilemap:
   - m_RefCount: 13335
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   - m_RefCount: 0
-    m_Data: {r: 8.648e-41, g: 8.648e-41, b: 8.648e-41, a: 8.648e-41}
+    m_Data: {r: 8.556e-41, g: 8.556e-41, b: 8.556e-41, a: 8.556e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 0.9607843}
@@ -135678,7 +135678,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-  mapKeeper: {fileID: 2121146357}
+  mapKeeper: {fileID: 0}
   startResourceType: 0
   startResourceValue: 50
   currentTeam: 0
