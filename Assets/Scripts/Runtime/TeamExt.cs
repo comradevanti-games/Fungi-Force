@@ -13,8 +13,8 @@ namespace TeamShrimp.GGJ23
         {
             return team switch
             {
-                Team.Red => new Color(0.61f, 0.15f, 0.14f),
-                Team.Blue => new Color(0.32f, 0.48f, 0.54f),
+                Team.Red => new Color(1f, 0.65f, 0.67f),
+                Team.Blue => new Color(0.7f, 0.91f, 1f),
                 _ => throw new ArgumentOutOfRangeException(nameof(team), team,
                     null)
             };
