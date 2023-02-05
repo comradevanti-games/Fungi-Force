@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace TeamShrimp.GGJ23
 {
@@ -40,7 +42,11 @@ namespace TeamShrimp.GGJ23
 
         public static Map GenerateMap(GenerationParams genGenerationParams)
         {
-            var tile = new Tile(genGenerationParams.TileType, 0);
+            Random.InitState(genGenerationParams.Seed);
+            
+            var variantCount = genGenerationParams.TileType.Variants.Count();
+            var variantIndex = Random.Range(0, variantCount);
+            var tile = new Tile(genGenerationParams.TileType, variantIndex);
 
             Map GeneratePosition(Map map, Vector2Int pos) =>
                 PlaceTileAt(map, pos, tile);
@@ -56,6 +62,8 @@ namespace TeamShrimp.GGJ23
             var withBlueTeam = PlaceStructureAt(withRedTeam, blueTeamPos,
                 new Structure(genGenerationParams.HomeStructure, Team.Blue));
 
+            Random.InitState(DateTime.Now.GetHashCode());
+            
             return withBlueTeam;
         }
 
