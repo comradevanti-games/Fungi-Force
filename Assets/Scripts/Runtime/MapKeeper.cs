@@ -79,7 +79,7 @@ namespace TeamShrimp.GGJ23
             return groundTilemap.CellToWorld(cell);
         }
 
-        public Vector3Int WorldToGridPos(Vector3 worldPos) =>
+        public Vector3Int WorldToGridPos(Vector2 worldPos) =>
             groundTilemap.WorldToCell(worldPos);
 
         public Vector3 GridToWorldPos(Vector3Int gridPos) =>
