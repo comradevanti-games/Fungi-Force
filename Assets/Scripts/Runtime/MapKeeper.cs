@@ -61,9 +61,9 @@ namespace TeamShrimp.GGJ23
         public void AddShroom(ShroomBase shroom)
         {
             var pos = WorldToGridPos(shroom.WorldPosition);
-            shroomsByPosition.Add((Vector2Int) pos, shroom);
-            groundTilemap.SetTileFlags(pos, TileFlags.None);
-            groundTilemap.SetColor(pos, shroom.Owner.ToColor());
+            shroomsByPosition.Add(pos, shroom);
+            groundTilemap.SetTileFlags(pos.To3Int(), TileFlags.None);
+            groundTilemap.SetColor(pos.To3Int(), shroom.Owner.ToColor());
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
@@ -76,8 +76,8 @@ namespace TeamShrimp.GGJ23
             return groundTilemap.CellToWorld(cell);
         }
 
-        public Vector3Int WorldToGridPos(Vector2 worldPos) =>
-            groundTilemap.WorldToCell(worldPos);
+        public Vector2Int WorldToGridPos(Vector2 worldPos) =>
+            groundTilemap.WorldToCell(worldPos).To2();
 
         public Vector3 GridToWorldPos(Vector3Int gridPos) =>
             groundTilemap.CellToWorld(gridPos);
