@@ -190,7 +190,7 @@ namespace TeamShrimp.GGJ23
             {
                 var worldPos = groundTilemap.CellToWorld(pos.To3Int());
                 var go = Instantiate(structure.Type.Prefab, worldPos,
-                    Quaternion.identity);
+                    structure.Type.Prefab.transform.rotation);
                 go.TryGetComponent<ShroomBase>()
                     .Iter(shroom =>
                     {
