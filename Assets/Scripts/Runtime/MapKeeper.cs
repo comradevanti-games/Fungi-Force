@@ -76,10 +76,16 @@ namespace TeamShrimp.GGJ23
         public IOpt<GameObject> TryFindObject(Vector2Int pos) =>
             gameObjectsByPosition.TryGet(pos);
 
+        public List<ShroomBase> FindAllShroomsOfTypeAndOwner(StructureType type, Team owner)
+        {
+            return AllShrooms.Where(shroom => shroom.ShroomType == type && shroom.Owner == owner).ToList();
+        }
+
         public void AddShroom(ShroomBase shroom)
         {
             var pos = WorldToGridPos(shroom.transform.position);
             shroomsByPosition.Add((Vector2Int) pos, shroom);
+            // gameObjectsByPosition.Add((Vector2Int) pos, shroom.gameObject);
             groundTilemap.SetTileFlags(pos, TileFlags.None);
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
         }
