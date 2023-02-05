@@ -1008,7 +1008,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5729414294661006614, guid: f75bcdf7755f9104ba6d54be5e47a0cc, type: 3}
       propertyPath: m_Name
-      value: 'GhostShroom - Stalk '
+      value: GhostShroom
       objectReference: {fileID: 0}
     - target: {fileID: 5893730934240471988, guid: f75bcdf7755f9104ba6d54be5e47a0cc, type: 3}
       propertyPath: m_RootOrder
