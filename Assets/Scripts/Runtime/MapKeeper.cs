@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComradeVanti.CSharpTools;
@@ -15,28 +14,26 @@ namespace TeamShrimp.GGJ23
         private const string StructureTypeResourcePath = "StructureTypes";
 
         [SerializeField] private Tilemap groundTilemap;
+        [SerializeField] private bool debug;
 
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
             new Dictionary<Vector2Int, ShroomBase>();
 
-        public string dictAsString = "";
-
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
-        public List<ShroomBase> AllShrooms =>
-            new List<ShroomBase>(shroomsByPosition.Values);
-
-        [SerializeField] private bool debug;
+        public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
         private void Awake()
         {
             if (debug)
             {
-                ShroomBase shroom = GameObject.FindWithTag("Shroom").GetComponent<ShroomBase>();
+                var shroom = GameObject.FindWithTag("Shroom")
+                    .GetComponent<ShroomBase>();
                 shroomsByPosition.Add(shroom.ShroomPosition, shroom);
                 return;
             }
+
             LoadTileTypes();
             LoadStructureTypes();
         }
@@ -48,10 +45,11 @@ namespace TeamShrimp.GGJ23
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetMouseButtonUp(2))
+            if (Input.GetKeyDown(KeyCode.LeftControl) ||
+                Input.GetMouseButtonUp(2))
             {
                 // --Debug.Log("Strategic View");
-                Color color = groundTilemap.color;
+                var color = groundTilemap.color;
                 color.a = color.a < 1 ? 1 : 0.25f;
                 groundTilemap.color = color;
             }
@@ -63,8 +61,9 @@ namespace TeamShrimp.GGJ23
         public void AddShroom(ShroomBase shroom)
         {
             var pos = WorldToGridPos(shroom.WorldPosition);
-            shroomsByPosition.Add((Vector2Int) pos, shroom);
-            dictAsString += "'" + pos + "': " + shroom + "\n";
+            shroomsByPosition.Add(pos, shroom);
+            groundTilemap.SetTileFlags(pos.To3Int(), TileFlags.None);
+            groundTilemap.SetColor(pos.To3Int(), shroom.Owner.ToColor());
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>
@@ -72,60 +71,61 @@ namespace TeamShrimp.GGJ23
 
         public Vector3 SnapToGridPos(Vector3 worldPos)
         {
-            Vector3Int cell = groundTilemap.WorldToCell(worldPos);
+            var cell = groundTilemap.WorldToCell(worldPos);
             cell.z = 1;
             return groundTilemap.CellToWorld(cell);
         }
 
-        public Vector3Int WorldToGridPos(Vector3 worldPos)
-        {
-            return groundTilemap.WorldToCell(worldPos);
-        }
+        public Vector2Int WorldToGridPos(Vector2 worldPos) =>
+            groundTilemap.WorldToCell(worldPos).To2();
 
-        public Vector3 GridToWorldPos(Vector3Int gridPos)
-        {
-            return groundTilemap.CellToWorld(gridPos);
-        }
+        public Vector3 GridToWorldPos(Vector3Int gridPos) =>
+            groundTilemap.CellToWorld(gridPos);
 
         public Vector3 GridToWorldPos(Vector2Int gridPos)
         {
-            Vector3Int pos = new Vector3Int(gridPos.x, gridPos.y, (int) groundTilemap.transform.position.z);
+            var pos = new Vector3Int(gridPos.x, gridPos.y,
+                (int) groundTilemap.transform.position.z);
             return GridToWorldPos(pos);
         }
 
-        public StructureType GetStructureType(String name)
-        {
-            return this.structureTypesByName[name];
-        }
+        public StructureType GetStructureType(string name) =>
+            structureTypesByName[name];
 
-        public List<Vector3Int> GetLerpPathCubed(Vector3Int startPosition, Vector3Int endPosition)
+        public List<Vector3Int> GetLerpPathCubed(
+            Vector3Int startPosition, Vector3Int endPosition)
         {
-            Vector3Int startCube = startPosition.OffsetToCube();
-            Vector3Int endCube = endPosition.OffsetToCube();
-            int cubeDistance = startCube.CubeDistance(endCube);
-            List<Vector3Int> results = new List<Vector3Int>();
+            var startCube = startPosition.OffsetToCube();
+            var endCube = endPosition.OffsetToCube();
+            var cubeDistance = startCube.CubeDistance(endCube);
+            var results = new List<Vector3Int>();
 
-            for (int i = 0; i <= cubeDistance; i++)
+            for (var i = 0; i <= cubeDistance; i++)
             {
-                float x = Mathf.Lerp(startCube.x, endCube.x, 1.0f / cubeDistance * i);
-                float y = Mathf.Lerp(startCube.y, endCube.y, 1.0f / cubeDistance * i);
-                float z = Mathf.Lerp(startCube.z, endCube.z, 1.0f / cubeDistance * i);
+                var x = Mathf.Lerp(startCube.x, endCube.x,
+                    1.0f / cubeDistance * i);
+                var y = Mathf.Lerp(startCube.y, endCube.y,
+                    1.0f / cubeDistance * i);
+                var z = Mathf.Lerp(startCube.z, endCube.z,
+                    1.0f / cubeDistance * i);
 
-                Vector3Int cube = new Vector3(x, y, z).CubeRound();
+                var cube = new Vector3(x, y, z).CubeRound();
                 results.Add(cube);
             }
 
             return results;
         }
 
-        public List<ShroomBase> FindOwnedShroomsInRange(ShroomBase root, float distance)
+        public List<ShroomBase> FindOwnedShroomsInRange(
+            ShroomBase root, float distance)
         {
-            List<ShroomBase> result = new List<ShroomBase>();
-            Vector3Int cubedStart = root.ShroomPosition.To3Int().OffsetToCube();
-            Stack<Vector3Int> cubesToCheck = new Stack<Vector3Int>();
-            List<Vector3Int> checkedCubes = new List<Vector3Int>();
+            var result = new List<ShroomBase>();
+            var cubedStart = root.ShroomPosition.To3Int().OffsetToCube();
+            var cubesToCheck = new Stack<Vector3Int>();
+            var checkedCubes = new List<Vector3Int>();
             checkedCubes.Add(cubedStart);
-            cubedStart.CubeNeighbours().ToList().ForEach(cube => cubesToCheck.Push(cube));
+            cubedStart.CubeNeighbours().ToList()
+                .ForEach(cube => cubesToCheck.Push(cube));
             Vector3Int cubeToCheck;
             while (cubesToCheck.TryPop(out cubeToCheck))
             {
@@ -139,7 +139,7 @@ namespace TeamShrimp.GGJ23
                 });
 
                 cubeToCheck = cubeToCheck.CubeToOffset();
-                IOpt<ShroomBase> shroom = TryFindShroom((Vector2Int) cubeToCheck);
+                var shroom = TryFindShroom((Vector2Int) cubeToCheck);
                 shroom.Iter(value =>
                 {
                     if (value.Owner == root.Owner)
