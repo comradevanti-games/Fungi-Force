@@ -32,9 +32,7 @@ namespace TeamShrimp.GGJ23
             set => _shroomType = value;
         }
         
-        public Vector2Int ShroomPosition => (Vector2Int) MushroomManager.Instance?.GetCellPositionForMush(WorldPosition);
-
-        public Vector3 WorldPosition { get; set; }
+        public Vector2Int ShroomPosition => (Vector2Int) MushroomManager.Instance?.GetCellPositionForMush(transform.position);
 
         public ShroomBase Parent
         {
@@ -81,9 +79,7 @@ namespace TeamShrimp.GGJ23
         {
             this._shroomId = MushroomManager.Instance.GenerateUniqueId();
             this.Children = new List<ShroomBase>();
-            this.transform.position = new Vector3(WorldPosition.x, WorldPosition.y, -3);
             _connector = GetComponent<LineRenderer>();
-            Debug.Log("Shroom initialized for " + owner);
             Owner = owner;
             // _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
@@ -115,7 +111,7 @@ namespace TeamShrimp.GGJ23
                    "\n ID=" + _shroomId +
                    "\n Position=" + ShroomPosition +
                    "\n Parent=" + _parent + 
-                   "\n WorldPosition=" + WorldPosition + 
+                   "\n WorldPosition=" + transform.position +
                    "\n Owned by=" + Owner + "\n}";
             // "\n Children=" + String.Join('\n', _children) + "\n}";
         }

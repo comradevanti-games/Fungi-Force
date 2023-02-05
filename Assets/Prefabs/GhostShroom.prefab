@@ -229,7 +229,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68df59e0eef54095898150791cbd7b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shroomType: {fileID: 11400000, guid: f2976ba424367ed48ac4c1816e918918, type: 2}
+  _shroomType: {fileID: 11400000, guid: cf6953fa0b74645459483eeaaf058d5c, type: 2}
+  _costsResource: 0
+  _price: 0
 --- !u!120 &6399029439090032448
 LineRenderer:
   serializedVersion: 2

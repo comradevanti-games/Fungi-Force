@@ -17,7 +17,6 @@ namespace TeamShrimp.GGJ23
 
         public override void Update()
         {
-            transform.position = WorldPosition;
             Connector.SetPosition(0, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
             Connector.SetPosition(1, transform.position);
 

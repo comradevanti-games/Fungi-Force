@@ -97,7 +97,7 @@ namespace TeamShrimp.GGJ23
                 if (ghostShroom.gameObject.activeSelf)
                 {
                     var gridPosition = map.SnapToGridPos(mousePosition);
-                    ghostShroom.WorldPosition = gridPosition;
+                    ghostShroom.transform.position = gridPosition;
                 }
             }
             else if (Input.GetMouseButtonUp(0))
@@ -198,7 +198,7 @@ namespace TeamShrimp.GGJ23
                 Debug.Log("Is free");
             var placedShroom = Instantiate(_selectedShroomPrefab)
                 .GetComponentInChildren<ShroomBase>();
-            placedShroom.WorldPosition = map.GridToWorldPos(gridPosition);
+            placedShroom.transform.position = map.GridToWorldPos(gridPosition);
             placedShroom.Initialize(gameManager.MyTeam);
 
             Debug.Log(placedShroom);
@@ -297,7 +297,7 @@ namespace TeamShrimp.GGJ23
         {
             var shroom = Instantiate(mushtype.Prefab)
                 .GetComponentInChildren<ShroomBase>();
-            shroom.WorldPosition =
+            shroom.transform.position =
                 GetWorldPositionForShroomPosition(shroomPosition);
             shroom.Parent = GetMushroomAtPosition(parentPosition);
             shroom.Initialize(Blackboard.IsHost ? Team.Blue : Team.Red);
