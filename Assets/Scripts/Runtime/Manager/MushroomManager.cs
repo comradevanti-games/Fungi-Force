@@ -141,13 +141,17 @@ namespace TeamShrimp.GGJ23
 
         public ShroomBase PlaceMushroom(Vector2Int gridPosition)
         {
+            ShroomBase prefabBase = _selectedShroomPrefab.GetComponentInChildren<ShroomBase>();
             if (debug)
                 Debug.Log("Placing Shroom at: " + gridPosition + ", selected Shroom is: " + _selectedShroom);
             if (_selectedShroom == null || !PositionsInRange(_selectedShroom.ShroomPosition, gridPosition)
-                || !map.CanPlace(_selectedShroomPrefab.GetComponentInChildren<ShroomBase>().ShroomType, gridPosition))
+                || !map.CanPlace(prefabBase.ShroomType, gridPosition))
             {
                 return null;
             }
+
+            if (!prefabBase.Pay())
+                return null;
             if (debug)
                 Debug.Log("Is free");
             ShroomBase placedShroom = Instantiate(_selectedShroomPrefab).GetComponentInChildren<ShroomBase>();

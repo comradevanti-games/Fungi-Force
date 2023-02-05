@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,13 +15,17 @@ namespace TeamShrimp.GGJ23
         // private Vector2Int _shroomPosition;
 
         [SerializeField] private ShroomType _shroomType;
-        
+
+        [SerializeField] private Resource _costsResource;
+
+        [SerializeField] private float _price;
+
         private ShroomBase _parent;
 
         private List<ShroomBase> _children;
         
         private LineRenderer _connector;
-        
+
         public ShroomType ShroomType
         {
             get => _shroomType;
@@ -56,6 +61,13 @@ namespace TeamShrimp.GGJ23
         public bool IsOfType(ShroomType shroomType) => _shroomType.name == shroomType.name;
 
         public Team Owner { get; set; }
+
+        public bool Pay()
+        {
+            if (ResourceTracker.Get(_costsResource) < _price)
+                return false;
+            return ResourceTracker.Subtract(_costsResource, _price);
+        }
         
         public void ConnectChild(ShroomBase shroom)
         {

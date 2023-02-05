@@ -83,6 +83,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shroomType: {fileID: 11400000, guid: f2976ba424367ed48ac4c1816e918918, type: 2}
+  _costsResource: 0
+  _price: 1
 --- !u!1 &898731793590859046
 GameObject:
   m_ObjectHideFlags: 0

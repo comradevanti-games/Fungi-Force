@@ -1,5 +1,9 @@
+using System;
 using System.Collections;
+using System.ComponentModel;
+using System.Resources;
 using TeamShrimp.GGJ23.Networking;
+using TeamShrimp.GGJ23.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +13,9 @@ namespace TeamShrimp.GGJ23
     {
         [SerializeField] private UnityEvent onGameStarted;
         [SerializeField] private UnityEvent onRoundStarted;
+
+        [SerializeField] private Resource startResourceType;
+        [SerializeField] private float startResourceValue;
 
         private Team currentTeam = Team.Red;
 
@@ -43,6 +50,8 @@ namespace TeamShrimp.GGJ23
         private void StartGame()
         {
             Debug.Log("Start game");
+            ResourceTracker.Set(startResourceType, startResourceValue);
+            Debug.Log("Player starts with " + ResourceTracker.ResourceToString(startResourceType));
             onGameStarted.Invoke();
 
             if (Blackboard.IsHost)
