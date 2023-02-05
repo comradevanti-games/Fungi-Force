@@ -169,9 +169,9 @@ namespace TeamShrimp.GGJ23
 
         private void InstantiateMapWith(int seed, int size)
         {
-            var defaultTile = tileTypesByName.Values.First();
             var genParams =
-                new MapGen.GenerationParams(seed, size, defaultTile,
+                new MapGen.GenerationParams(seed, size,
+                    tileTypesByName,
                     structureTypesByName["Home"],
                     structureTypesByName["Tree"]);
             var map = MapGen.GenerateMap(genParams);

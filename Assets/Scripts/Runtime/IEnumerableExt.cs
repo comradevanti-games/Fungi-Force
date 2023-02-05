@@ -13,5 +13,11 @@ namespace TeamShrimp.GGJ23
             var arr = items.ToArray();
             for (var i = 0; i < arr.Length; i++) action(i, arr[i]);
         }
+
+        public static T Random<T>(this IEnumerable<T> items)
+        {
+            var arr = items.ToArray();
+            return arr[UnityEngine.Random.Range(0, arr.Length)];
+        }
     }
 }

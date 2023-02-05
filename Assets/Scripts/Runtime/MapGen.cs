@@ -69,18 +69,18 @@ namespace TeamShrimp.GGJ23
                             !map.StructuresByPosition.ContainsKey(it))
                         // Is on the correct side
                         .Where(it => IsOnTeamSide(it, team))
-                        .ToArray()
                         // Take a random one
-                        .Then(possible =>
-                            possible[Random.Range(0, possible.Length)]);
+                        .Random();
+
+                TileType ChooseTileType() =>
+                    genParams.TileTypesByName.Values.Random();
 
                 Map GenerateTileAt(Map map, Vector2Int pos)
                 {
-                    var variantCount =
-                        genParams.TileType.Variants.Count();
+                    var tileType = ChooseTileType();
+                    var variantCount = tileType.Variants.Count();
                     var variantIndex = Random.Range(0, variantCount);
-                    var tile = new Tile(genParams.TileType,
-                        variantIndex);
+                    var tile = new Tile(tileType, variantIndex);
                     return PlaceTileAt(map, pos, tile);
                 }
 
@@ -128,7 +128,7 @@ namespace TeamShrimp.GGJ23
         public record GenerationParams(
             int Seed,
             int Size,
-            TileType TileType,
+            IReadOnlyDictionary<string, TileType> TileTypesByName,
             StructureType HomeStructure,
             StructureType TreeStructure);
 
