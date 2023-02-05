@@ -27,6 +27,9 @@ namespace TeamShrimp.GGJ23
 
         [SerializeField] private ShroomConnection connectionPrefab;
 
+        private readonly List<ShroomConnection> _shroomConnections =
+            new List<ShroomConnection>();
+
         private Camera _activeCamera;
 
         // private List<ShroomBase> _shroomsInGame;
@@ -34,9 +37,6 @@ namespace TeamShrimp.GGJ23
         private ShroomBase _selectedShroom;
 
         private GameObject _selectedShroomPrefab;
-
-        private readonly List<ShroomConnection> _shroomConnections =
-            new List<ShroomConnection>();
 
         public GameObject SelectedShroomPrefab
         {
@@ -136,7 +136,7 @@ namespace TeamShrimp.GGJ23
 
         public long GenerateUniqueId()
         {
-            if (map.AllShrooms.Count == 0) return 1;
+            if (!map.AllShrooms.Any()) return 1;
 
             return map.AllShrooms.Max(shroom => shroom.ShroomId) + 1;
         }
@@ -175,7 +175,6 @@ namespace TeamShrimp.GGJ23
 
         public void RemoveMushroom(ShroomBase shroomBase)
         {
-            map.AllShrooms.Remove(shroomBase);
             map.RemoveAtPosition(shroomBase.ShroomPosition);
         }
 

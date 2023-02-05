@@ -22,8 +22,7 @@ namespace TeamShrimp.GGJ23
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
-        public List<ShroomBase> AllShrooms =>
-            new List<ShroomBase>(shroomsByPosition.Values);
+        public IEnumerable<ShroomBase> AllShrooms => shroomsByPosition.Values;
 
         private void Awake()
         {
