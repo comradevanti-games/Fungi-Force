@@ -253,7 +253,7 @@ namespace TeamShrimp.GGJ23
 
             CheckForConnections(placedShroom);
             
-            BreakConnections(gameManager.MyTeam == Team.Red ? Team.Blue : Team.Red);
+            // BreakConnections(gameManager.MyTeam == Team.Red ? Team.Blue : Team.Red);
 
             Debug.Log("Checked for Connections");
             
@@ -388,7 +388,7 @@ namespace TeamShrimp.GGJ23
             shroom.Parent = GetMushroomAtPosition(parentPosition);
             shroom.Initialize(Blackboard.IsHost ? Team.Blue : Team.Red);
             CheckForConnections(shroom);
-            BreakConnections(gameManager.MyTeam);
+            // BreakConnections(gameManager.MyTeam);
             map.AddShroom(shroom);
         }
 
