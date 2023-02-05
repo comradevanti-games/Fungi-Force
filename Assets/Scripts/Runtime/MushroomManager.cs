@@ -364,6 +364,7 @@ namespace TeamShrimp.GGJ23
 
         public void HandleTurnChange(Team team)
         {
+            Debug.Log("HandleTurnChange(" + team + ")");
             ShootBait(team);
             AssignResources(team);
         }

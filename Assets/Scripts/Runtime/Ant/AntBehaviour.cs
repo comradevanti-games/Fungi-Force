@@ -91,6 +91,7 @@ namespace TeamShrimp.GGJ23
         public void Start()
         {
             lr = GetComponent<LineRenderer>();
+            //InvokeRepeating("Turn", 0.5f, 0.5f);
         }
 
         public void Initialize(Vector3Int cubeStartPosition, OffsetRotation offsetRotationInit, MapKeeper mapKeeper, MushroomManager mushroomManager, Grid grid)
@@ -216,10 +217,12 @@ namespace TeamShrimp.GGJ23
         public IEnumerator<AntBehaviourPredictionState> PathCreator(AntBehaviourPredictionState predictionState, bool isSimulation = false)
         {
             List<Vector3Int> stolenShrooms = new List<Vector3Int>();
+            List<Vector3Int> takenBaits = new List<Vector3Int>();
             int dontDie = 0;
             var repetitionInternal = 1;
             Vector3Int lastPos = predictionState.cubePos;
             OffsetRotation internalOffsetRotation = predictionState.rotation;
+            
             int rotDir = 1;
             while (true)
             {
@@ -238,8 +241,31 @@ namespace TeamShrimp.GGJ23
                                 break;
                         }
 
+                        AntManager manager = AntManager.instance;
+                        Vector3Int? baitPos = manager.CheckForBaitInRange(lastPos, takenBaits);
                         Vector3Int? vector3Int = FindClosebyMushroom(lastPos, internalOffsetRotation, isSimulation, stolenShrooms);
-                        if (vector3Int.HasValue)
+                        if (baitPos.HasValue)
+                        {
+                            if (!baitPos.Value.Equals(lastPos))
+                            {
+                                List<Vector3Int> route = manager.GetRoute(lastPos, baitPos.Value);
+                                foreach (var pos in route)
+                                {
+                                    if (!pos.Equals(lastPos))
+                                    {
+                                        lastPos = pos;
+                                        break;
+                                    }
+                                }
+                                Debug.Log("BAITED! MOVING TO " + lastPos);
+                            }
+                            else
+                            {
+                                Debug.Log("ADDING TO TAKEN BAITS");
+                                takenBaits.Add(lastPos);
+                            }
+                        }
+                        else if (vector3Int.HasValue)
                         {
                             var off = vector3Int.Value - lastPos;
                             internalOffsetRotation = (OffsetRotation) offsets.FindIndex(i => i.Equals(off));
@@ -248,7 +274,8 @@ namespace TeamShrimp.GGJ23
                         }
                         else
                             lastPos += offsets[(int) internalOffsetRotation];
-                        // anthillPosition = lastPos;
+                         
+                        anthillPosition = lastPos;
                         if(dontDie++ > 100000)
                             yield break;
                         if (Vector3Int.zero.CubeDistance(lastPos) >= mapSize)
@@ -275,7 +302,6 @@ namespace TeamShrimp.GGJ23
                 rotDir *= -1;
                 repetitionInternal++;
             }
-            
         }
 
         public struct AntBehaviourPredictionState
