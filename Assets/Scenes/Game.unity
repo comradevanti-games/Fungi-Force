@@ -135666,7 +135666,7 @@ MonoBehaviour:
         m_CallState: 1
       - m_Target: {fileID: 2121146358}
         m_TargetAssemblyTypeName: TeamShrimp.GGJ23.MushroomManager, TeamShrimp.GGJ23
-        m_MethodName: AssignResources
+        m_MethodName: HandleTurnChange
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

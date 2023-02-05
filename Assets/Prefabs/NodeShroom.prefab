@@ -384,7 +384,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1331047079920723470, guid: 33b3b5373d08be043ae06980c0977267, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8104615389310132812}
+      addedObject: {fileID: 8846295811898593974}
   m_SourcePrefab: {fileID: 100100000, guid: 33b3b5373d08be043ae06980c0977267, type: 3}
 --- !u!4 &183949213345950767 stripped
 Transform:
@@ -396,7 +396,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1331047079920723470, guid: 33b3b5373d08be043ae06980c0977267, type: 3}
   m_PrefabInstance: {fileID: 1999176286185722011}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8104615389310132812
+--- !u!114 &8846295811898593974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,7 +405,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 704343271010399893}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
+  m_Script: {fileID: 11500000, guid: a21bc227da9ce7c42b22384cba1b6170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _shroomType: {fileID: 11400000, guid: e5c72c4871c77dd49a02192b9025b682, type: 2}
@@ -480,7 +480,7 @@ PrefabInstance:
       addedObject: {fileID: 4933683434201882333}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: df6a8ef3262432943a8eb8d21de73d2d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6412417332915636141}
+      addedObject: {fileID: 7572933698866783165}
   m_SourcePrefab: {fileID: 100100000, guid: df6a8ef3262432943a8eb8d21de73d2d, type: 3}
 --- !u!4 &6266246072212915074 stripped
 Transform:
@@ -512,7 +512,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &6412417332915636141
+--- !u!114 &7572933698866783165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -521,9 +521,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6754833428048271672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc5160876d844e5bab622cbba6c7e6f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 68584e43b1caca244b40a6c37ab4460d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _shroomType: {fileID: 11400000, guid: 59fc54b3ba3f5f342948b52321810670, type: 2}
   _costsResource: 0
-  _price: 1
+  _price: 5
+  baitPrefab: {fileID: 919132149155446097, guid: 1c7762c9bce5f4ab7b060decb9e3002d, type: 3}
+  shootDistance: 3
+  cooldown: 3
