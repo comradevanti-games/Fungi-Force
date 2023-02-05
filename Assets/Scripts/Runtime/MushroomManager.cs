@@ -32,19 +32,16 @@ namespace TeamShrimp.GGJ23
 
         private Camera _activeCamera;
 
-        private GameObject _selectedShroomPrefab;
-
         // private List<ShroomBase> _shroomsInGame;
 
-        private IOpt<ShroomBase> selectedShroom = Opt.None<ShroomBase>();
+        private ShroomBase _selectedShroom;
+
+        private GameObject _selectedShroomPrefab;
 
         public GameObject SelectedShroomPrefab
         {
             set => _selectedShroomPrefab = value;
         }
-
-        private bool HasSelection => selectedShroom.IsSome();
-
 
         private void Awake()
         {
@@ -70,54 +67,71 @@ namespace TeamShrimp.GGJ23
         {
             if (!gameManager.IsMyTurn) return;
 
-            var gridPosition = GetGridMousePosition();
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (HasSelection) return;
-
-                var shroomAtPos = map.TryFindShroom(gridPosition);
-                selectedShroom =
-                    shroomAtPos.Filter(it => it.Owner == gameManager.MyTeam);
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                selectedShroom.Iter(it =>
-                {
-                    if (it && !ghostShroom.gameObject.activeSelf)
-                    {
-                        ghostShroom.gameObject.SetActive(true);
-                        ghostShroom.Parent = it;
-                    }
-
-                    if (ghostShroom.gameObject.activeSelf)
-                        ghostShroom.WorldPosition = gridPosition.To3();
-                });
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                selectedShroom.Iter(it =>
-                {
-                    var toAdd = PlaceMushroom(it, gridPosition);
-                    if (toAdd) map.AddShroom(toAdd);
-                    ghostShroom.gameObject.SetActive(false);
-                    selectedShroom = Opt.None<ShroomBase>();
-                });
-            }
-        }
-
-        private Vector2Int GetGridMousePosition()
-        {
-            var mousePosition = GetWorldspaceMousePosition();
-            return map.WorldToGridPos(mousePosition);
-        }
-
-        private static Vector3 GetWorldspaceMousePosition()
-        {
             var mousePosition = Input.mousePosition;
+            // mousePosition.z = Mathf.Abs(CameraManager.Instance.MainCamera.transform.position.z) + 1;
             mousePosition =
                 CameraManager.Instance.MainCamera.ScreenToWorldPoint(
                     mousePosition);
-            return mousePosition;
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (_selectedShroom == null)
+                {
+                    var gridPosition = map.WorldToGridPos(mousePosition);
+                    var shroomAsPos =
+                        GetMushroomAtPosition((Vector2Int) gridPosition);
+                    if (shroomAsPos && shroomAsPos.Owner == gameManager.MyTeam)
+                        _selectedShroom = shroomAsPos;
+                    if (debug)
+                        Debug.Log("Found Shroom: " + _selectedShroom);
+                }
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                if (_selectedShroom != null &&
+                    !ghostShroom.gameObject.activeSelf)
+                {
+                    ghostShroom.gameObject.SetActive(true);
+                    ghostShroom.Parent = _selectedShroom;
+                }
+
+                if (ghostShroom.gameObject.activeSelf)
+                {
+                    var gridPosition = map.SnapToGridPos(mousePosition);
+                    ghostShroom.WorldPosition = gridPosition;
+                }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                if (_selectedShroom != null)
+                {
+                    var gridPosition = map.WorldToGridPos(mousePosition);
+                    ShroomBase toAdd = null;
+                    toAdd = PlaceMushroom((Vector2Int) gridPosition);
+                    if (debug)
+                        Debug.Log("I added " + toAdd);
+                    if (toAdd)
+                        map.AddShroom(toAdd);
+                    ghostShroom.gameObject.SetActive(false);
+                    _selectedShroom = null;
+                }
+            }
+        }
+
+        public ShroomBase TryGetShroomAtPosition(Vector2Int gridPosition)
+        {
+            if (debug)
+                Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
+            // TODO Change to Map request
+            var hit =
+                Physics2D.CircleCast(gridPosition, cellLength, Vector2.zero);
+            if (hit && hit.collider.CompareTag("Shroom"))
+            {
+                if (debug)
+                    Debug.Log("Raycast Hit: " + hit.collider.tag);
+                return GetMushroomAtPosition(Vector2Int.CeilToInt(hit.point));
+            }
+
+            return null;
         }
 
         public long GenerateUniqueId()
@@ -164,20 +178,24 @@ namespace TeamShrimp.GGJ23
             map.RemoveAtPosition(shroomBase.ShroomPosition);
         }
 
-        public ShroomBase PlaceMushroom(
-            ShroomBase parent, Vector2Int gridPosition)
+        public ShroomBase PlaceMushroom(Vector2Int gridPosition)
         {
             var prefabBase =
                 _selectedShroomPrefab.GetComponentInChildren<ShroomBase>();
-            if (!PositionsInRange(
-                    parent.ShroomPosition,
-                    gridPosition)
-                || !map.CanPlace(prefabBase.ShroomType,
-                    gridPosition))
+            if (debug)
+                Debug.Log("Placing Shroom at: " + gridPosition +
+                          ", selected Shroom is: " + _selectedShroom);
+            if (_selectedShroom == null || !PositionsInRange(
+                                            _selectedShroom.ShroomPosition,
+                                            gridPosition)
+                                        || !map.CanPlace(prefabBase.ShroomType,
+                                            gridPosition))
                 return null;
 
             if (!prefabBase.Pay())
                 return null;
+            if (debug)
+                Debug.Log("Is free");
             var placedShroom = Instantiate(_selectedShroomPrefab)
                 .GetComponentInChildren<ShroomBase>();
             placedShroom.WorldPosition = map.GridToWorldPos(gridPosition);
@@ -195,7 +213,7 @@ namespace TeamShrimp.GGJ23
 
             var placeCommand = new PlaceCommand(placedShroom.ShroomType.name,
                 placedShroom.ShroomId, placedShroom.ShroomPosition,
-                parent.ShroomPosition);
+                _selectedShroom.ShroomPosition);
             networkManager.SendCommand(placeCommand);
             if (debug)
             {
@@ -213,6 +231,15 @@ namespace TeamShrimp.GGJ23
             _shroomConnections.Add(connection);
         }
 
+        public ShroomBase GetMushroomAtPosition(Vector2Int gridPosition)
+        {
+            if (debug)
+                Debug.Log("GetMushroomAtPosition(" + gridPosition + ")");
+            ShroomBase result = null;
+            map.TryFindShroom(gridPosition).Iter(shroom => result = shroom);
+            return result;
+        }
+
         public bool
             ShroomsInRange(ShroomBase shroomOne, ShroomBase shroomTwo) =>
             PositionsInRange(shroomOne.ShroomPosition,
@@ -225,7 +252,7 @@ namespace TeamShrimp.GGJ23
             return dist <= maxDistanceAllowed;
         }
 
-        public Vector2Int GetCellPositionForMush(Vector3 worldPos) =>
+        public Vector3Int GetCellPositionForMush(Vector3 worldPos) =>
             map.WorldToGridPos(worldPos);
 
         public Vector3 GetWorldPositionForShroomPosition(
@@ -272,7 +299,7 @@ namespace TeamShrimp.GGJ23
                 .GetComponentInChildren<ShroomBase>();
             shroom.WorldPosition =
                 GetWorldPositionForShroomPosition(shroomPosition);
-            shroom.Parent = map.TryFindShroom(parentPosition).Get();
+            shroom.Parent = GetMushroomAtPosition(parentPosition);
             shroom.Initialize(Blackboard.IsHost ? Team.Blue : Team.Red);
             CheckForConnections(shroom);
             map.AddShroom(shroom);
