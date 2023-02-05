@@ -58,6 +58,21 @@ namespace TeamShrimp.GGJ23.Runtime.Util
             return new Vector3Int(x, y, z);
         }
 
+        public static Vector3Int[] CubeNeighbours(this Vector3Int cubeStart)
+        {
+            Vector3Int[] neighbours = new[]
+            {
+                cubeStart + new Vector3Int(1, 0, -1),
+                cubeStart + new Vector3Int(-1, 0, 1),
+                cubeStart + new Vector3Int(1, -1, 0),
+                cubeStart + new Vector3Int(-1, 1, 0),
+                cubeStart + new Vector3Int(0, -1, 1),
+                cubeStart + new Vector3Int(0, 1, -1)
+            };
+
+            return neighbours;
+        }
+        
         public static List<Vector3> AsVec3List(this List<Vector3Int> vector3Ints)
         {
             List<Vector3> vector3s = new List<Vector3>();

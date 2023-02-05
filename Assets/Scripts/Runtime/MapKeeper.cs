@@ -115,6 +115,34 @@ namespace TeamShrimp.GGJ23
             return results;
         }
 
+        public List<ShroomBase> FindShroomsInRange(ShroomBase root, float distance)
+        {
+            List<ShroomBase> result = new List<ShroomBase>();
+            Vector3Int cubedStart = root.ShroomPosition.To3Int().OffsetToCube();
+            Stack<Vector3Int> cubesToCheck = new Stack<Vector3Int>();
+            List<Vector3Int> checkedCubes = new List<Vector3Int>();
+            checkedCubes.Add(cubedStart);
+            cubedStart.CubeNeighbours().ToList().ForEach(cube => cubesToCheck.Push(cube));
+            Vector3Int cubeToCheck;
+            while (cubesToCheck.TryPop(out cubeToCheck))
+            {
+                if (cubeToCheck.CubeDistance(cubedStart) > distance)
+                    continue;
+                checkedCubes.Add(cubeToCheck);
+                cubeToCheck.CubeNeighbours().ToList().ForEach(cube =>
+                {
+                    if (!checkedCubes.Contains(cube))
+                        cubesToCheck.Push(cube);
+                });
+
+                cubeToCheck = cubeToCheck.CubeToOffset();
+                IOpt<ShroomBase> shroom = TryFindShroom((Vector2Int) cubeToCheck);
+                shroom.Iter(value => result.Add(value));
+            }
+
+            return result;
+        }
+
         private void InstantiateGameMap()
         {
             InstantiateMapWith(Blackboard.Game.MapSize);

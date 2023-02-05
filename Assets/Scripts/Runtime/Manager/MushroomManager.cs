@@ -152,15 +152,9 @@ namespace TeamShrimp.GGJ23
             placedShroom.WorldPosition = map.GridToWorldPos(gridPosition);
             
             Debug.Log(placedShroom);
-
-            if (_selectedShroom != null)
-            {
-                // _selectedShroom.ConnectChild(placedShroom);
-                ShroomConnection connection = Instantiate(connectionPrefab);
-                connection.Initialize(placedShroom, _selectedShroom, map);
-                _shroomConnections.Add(connection);
-            }
             
+            CheckForConnections(placedShroom);
+
             placedShroom.Initialize();
             onShroomPlaced.Invoke();
 
@@ -172,6 +166,13 @@ namespace TeamShrimp.GGJ23
                 Debug.Log("BYTE TO BIT STRING: " + 0b101);
             }
             return placedShroom;
+        }
+
+        private void ConnectShrooms(ShroomBase start, ShroomBase end)
+        {
+            ShroomConnection connection = Instantiate(connectionPrefab);
+            connection.Initialize(start, end, map);
+            _shroomConnections.Add(connection);
         }
 
         public ShroomBase GetMushroomAtPosition(Vector2Int gridPosition)
@@ -203,6 +204,24 @@ namespace TeamShrimp.GGJ23
         public Vector3 GetWorldPositionForShroomPosition(Vector2Int shroomPosition)
         {
             return map.GridToWorldPos(shroomPosition);
+        }
+
+        public void CheckForConnections(ShroomBase placedShroom)
+        {
+            List<ShroomBase> shroomsToCheck = map.FindShroomsInRange(placedShroom, maxDistanceAllowed);
+            shroomsToCheck.ForEach(shroom =>
+            {
+                if (!ConnectionExists(placedShroom, shroom))
+                    ConnectShrooms(placedShroom, shroom);
+            });
+        }
+
+        private bool ConnectionExists(ShroomBase start, ShroomBase end)
+        {
+            return _shroomConnections.Find(connection => (connection.StartShroom.ShroomId == start.ShroomId &&
+                                                          connection.EndShroom.ShroomId == end.ShroomId) ||
+                                                         (connection.StartShroom.ShroomId == end.ShroomId &&
+                                                          connection.EndShroom.ShroomId == start.ShroomId)) != null;
         }
 
         public void ReadPlaceCommand(BaseCommand baseCommand)
