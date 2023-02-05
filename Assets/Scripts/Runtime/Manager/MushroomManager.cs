@@ -103,6 +103,8 @@ namespace TeamShrimp.GGJ23
                     Vector3Int gridPosition = map.WorldToGridPos(mousePosition);
                     ShroomBase toAdd = null;
                     toAdd = PlaceMushroom((Vector2Int) gridPosition);
+                    if (debug)
+                        Debug.Log("I added " + toAdd);
                     if (toAdd)
                         this.map.AddShroom(toAdd);
                     ghostShroom.gameObject.SetActive(false);
@@ -142,22 +144,26 @@ namespace TeamShrimp.GGJ23
             if (debug)
                 Debug.Log("Placing Shroom at: " + gridPosition + ", selected Shroom is: " + _selectedShroom);
             if (_selectedShroom == null || !PositionsInRange(_selectedShroom.ShroomPosition, gridPosition)
-                || !map.CanPlace(_selectedShroomPrefab.GetComponent<ShroomBase>().ShroomType, gridPosition))
+                || !map.CanPlace(_selectedShroomPrefab.GetComponentInChildren<ShroomBase>().ShroomType, gridPosition))
             {
                 return null;
             }
             if (debug)
                 Debug.Log("Is free");
-            ShroomBase placedShroom = Instantiate(_selectedShroomPrefab).GetComponent<ShroomBase>();
+            ShroomBase placedShroom = Instantiate(_selectedShroomPrefab).GetComponentInChildren<ShroomBase>();
             placedShroom.WorldPosition = map.GridToWorldPos(gridPosition);
             
             Debug.Log(placedShroom);
             
             CheckForConnections(placedShroom);
-
+            
+            Debug.Log("Checked for Connections");
+            
             placedShroom.Initialize();
             onShroomPlaced.Invoke();
-
+            
+            Debug.Log("Invoked Event");
+            
             PlaceCommand placeCommand = new PlaceCommand(placedShroom.ShroomType.name, placedShroom.ShroomId, placedShroom.ShroomPosition, _selectedShroom.ShroomPosition);
             networkManager.SendCommand(placeCommand);
             if (debug)
@@ -239,7 +245,7 @@ namespace TeamShrimp.GGJ23
 
         public void SyncShroom(Vector2Int shroomPosition, Vector2Int parentPosition, StructureType mushtype)
         {
-            ShroomBase shroom = Instantiate(mushtype.Prefab).GetComponent<ShroomBase>();
+            ShroomBase shroom = Instantiate(mushtype.Prefab).GetComponentInChildren<ShroomBase>();
             shroom.WorldPosition = GetWorldPositionForShroomPosition(shroomPosition);
             shroom.Parent = GetMushroomAtPosition(parentPosition);
             shroom.Initialize();

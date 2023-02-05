@@ -19,6 +19,8 @@ namespace TeamShrimp.GGJ23
         private readonly Dictionary<Vector2Int, ShroomBase> shroomsByPosition =
             new Dictionary<Vector2Int, ShroomBase>();
 
+        public string dictAsString = "";
+
         private IReadOnlyDictionary<string, StructureType> structureTypesByName;
         private IReadOnlyDictionary<string, TileType> tileTypesByName;
 
@@ -60,8 +62,9 @@ namespace TeamShrimp.GGJ23
 
         public void AddShroom(ShroomBase shroom)
         {
-            var pos = shroom.ShroomPosition;
-            shroomsByPosition.Add(pos, shroom);
+            var pos = WorldToGridPos(shroom.WorldPosition);
+            shroomsByPosition.Add((Vector2Int) pos, shroom);
+            dictAsString += "'" + pos + "': " + shroom + "\n";
         }
 
         public bool CanPlace(ShroomType type, Vector2Int pos) =>

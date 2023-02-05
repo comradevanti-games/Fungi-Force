@@ -67,14 +67,14 @@ namespace TeamShrimp.GGJ23
         {
             this._shroomId = MushroomManager.Instance.GenerateUniqueId();
             this.Children = new List<ShroomBase>();
-            this.transform.position = WorldPosition;
+            this.transform.position = new Vector3(WorldPosition.x, WorldPosition.y, -3);
             _connector = GetComponent<LineRenderer>();
-            _connector.SetPositions(new Vector3[] {transform.position, transform.position});
+            // _connector.SetPositions(new Vector3[] {transform.position, transform.position});
 
-            if (Parent != null)
-            {
-                _connector.SetPosition(1, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
-            }
+            //if (Parent != null)
+            //{
+            //    _connector.SetPosition(1, MushroomManager.Instance.GetWorldPositionForShroomPosition(ParentPosition));
+            //}
         }
 
         public abstract void Start();
