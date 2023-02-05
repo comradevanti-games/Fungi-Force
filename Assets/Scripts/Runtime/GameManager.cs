@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Resources;
 using TeamShrimp.GGJ23.Networking;
 using TeamShrimp.GGJ23.Runtime;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +14,7 @@ namespace TeamShrimp.GGJ23
     {
         [SerializeField] private UnityEvent onGameStarted;
         [SerializeField] private UnityEvent onRoundStarted;
+        [SerializeField] private UnityEvent<Team> onTeamChanged;
 
         [SerializeField] private Resource startResourceType;
         [SerializeField] private float startResourceValue;
@@ -52,6 +54,7 @@ namespace TeamShrimp.GGJ23
             ResourceTracker.Set(startResourceType, startResourceValue);
             Debug.Log("Player starts with " + ResourceTracker.ResourceToString(startResourceType));
             onGameStarted.Invoke();
+            onTeamChanged.Invoke(currentTeam);
 
             if (Blackboard.IsHost)
                 StartRound();
@@ -79,6 +82,7 @@ namespace TeamShrimp.GGJ23
         {
             Debug.Log("Switched team");
             currentTeam = currentTeam == Team.Red ? Team.Blue : Team.Red;
+            onTeamChanged.Invoke(currentTeam);
         }
     }
 }
