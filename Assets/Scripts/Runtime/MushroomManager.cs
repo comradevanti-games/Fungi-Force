@@ -364,9 +364,6 @@ namespace TeamShrimp.GGJ23
 
         public void HandleTurnChange(Team team)
         {
-            if (team != gameManager.MyTeam)
-                return;
-            
             ShootBait(team);
             AssignResources(team);
         }
@@ -380,6 +377,8 @@ namespace TeamShrimp.GGJ23
         
         public void AssignResources(Team team)
         {
+            if (team != gameManager.MyTeam)
+                return;
             List<ShroomBase> ownedPowerShrooms =
                 map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("PowerShroom"), team);
             if (ResourceTracker.Add(Resource.SPORE, ownedPowerShrooms.Count))
