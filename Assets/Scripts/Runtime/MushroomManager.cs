@@ -150,10 +150,10 @@ namespace TeamShrimp.GGJ23
                 shroomBase.ShroomId == connection.EndShroom.ShroomId);
         }
 
-        public void KillConnection(ShroomConnection mushroomConnnection)
+        public void KillConnection(ShroomConnection mushroomConnection)
         {
-            _shroomConnections.Remove(mushroomConnnection);
-            Destroy(mushroomConnnection);
+            _shroomConnections.Remove(mushroomConnection);
+            Destroy(mushroomConnection);
         }
 
         public int RemoveAllShroomConnectionsInvolving(ShroomBase shroomBase)
