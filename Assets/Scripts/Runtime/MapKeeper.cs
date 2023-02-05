@@ -167,10 +167,10 @@ namespace TeamShrimp.GGJ23
         private void InstantiateMapWith(int seed, int size)
         {
             var defaultTile = tileTypesByName.Values.First();
-            var homeStructure = structureTypesByName["Home"];
             var genParams =
                 new MapGen.GenerationParams(seed, size, defaultTile,
-                    homeStructure);
+                    structureTypesByName["Home"],
+                    structureTypesByName["Tree"]);
             var map = MapGen.GenerateMap(genParams);
             InstantiateMap(map);
         }
