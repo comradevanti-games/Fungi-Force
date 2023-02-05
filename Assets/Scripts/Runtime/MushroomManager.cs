@@ -307,6 +307,11 @@ namespace TeamShrimp.GGJ23
         public Vector3 GetWorldPositionForShroomPosition(
             Vector2Int shroomPosition) => map.GridToWorldPos(shroomPosition);
 
+        public List<ShroomConnection> GetAllConnectionsOfOwner(Team team)
+        {
+            return _shroomConnections.FindAll(conn => conn.StartShroom.Owner == team);
+        }
+        
         public void CheckForConnections(ShroomBase placedShroom)
         {
             var shroomsToCheck =
