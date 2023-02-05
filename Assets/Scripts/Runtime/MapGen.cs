@@ -40,13 +40,15 @@ namespace TeamShrimp.GGJ23
         }
 
         private static Map PlaceTileAt(Map map, Vector2Int pos, Tile tile) =>
-            new Map(map.TilesByPosition.Add(pos, tile),
-                map.StructuresByPosition);
+            map with {TilesByPosition = map.TilesByPosition.SetItem(pos, tile)};
 
         private static Map PlaceStructureAt(
             Map map, Vector2Int pos, Structure structure) =>
-            new Map(map.TilesByPosition,
-                map.StructuresByPosition.Add(pos, structure));
+            map with
+            {
+                StructuresByPosition =
+                map.StructuresByPosition.SetItem(pos, structure)
+            };
 
         private static Vector2Int HomePosition(Team team, int mapSize) =>
             new Vector2Int((mapSize - 2) * (team == Team.Red ? 1 : -1), 0);
