@@ -362,11 +362,23 @@ namespace TeamShrimp.GGJ23
             });
         }
 
+        public void HandleTurnChange(Team team)
+        {
+            ShootBait(team);
+            AssignResources(team);
+        }
+        
+        public void ShootBait(Team team)
+        {
+            List<ShroomBase> ownedTurretShrooms =
+                map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("TurretShroom"), team);
+            ownedTurretShrooms.ForEach(ownedTurret => ((TurretShroom) ownedTurret).ShootBait(map));
+        }
+        
         public void AssignResources(Team team)
         {
             if (team != gameManager.MyTeam)
                 return;
-
             List<ShroomBase> ownedPowerShrooms =
                 map.FindAllShroomsOfTypeAndOwner(map.GetStructureType("PowerShroom"), team);
             if (ResourceTracker.Add(Resource.SPORE, ownedPowerShrooms.Count))
