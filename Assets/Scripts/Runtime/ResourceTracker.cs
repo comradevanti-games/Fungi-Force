@@ -56,7 +56,7 @@ namespace TeamShrimp.GGJ23
         {
             float value = Get(resource);
             return resource.ToString().ToArray()[0] + resource.ToString().Substring(1).ToLower() + ": " + 
-                   (value.Equals(float.MinValue) ? "ERROR" : value);
+                   (value.Equals(float.MinValue) ? "" : value);
         }
     }
 }

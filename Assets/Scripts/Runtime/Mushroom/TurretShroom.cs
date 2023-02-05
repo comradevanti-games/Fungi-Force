@@ -43,7 +43,7 @@ namespace TeamShrimp.GGJ23
             if (turnCount < 0)
             {
                 Debug.Log("Shoot!");
-                _animator.SetTrigger("Shoot");
+                // _animator.SetTrigger("Shoot");
                 Vector3 spawnPos = map.WorldToGridPos(transform.position).OffsetToCube() +
                                    (cubeDirection * shootDistance);
                 GameObject gameObject = Instantiate(baitPrefab, spawnPos, baitPrefab.transform.rotation);

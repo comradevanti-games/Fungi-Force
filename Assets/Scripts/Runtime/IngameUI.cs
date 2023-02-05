@@ -19,7 +19,7 @@ namespace TeamShrimp.GGJ23
         {
             textPerResource = new Dictionary<Resource, string>();
             textPerResource.Add(Resource.SPORE, ResourceTracker.ResourceToString(Resource.SPORE));
-            textPerResource.Add(Resource.OTHER, ResourceTracker.ResourceToString(Resource.OTHER));
+            // textPerResource.Add(Resource.OTHER, ResourceTracker.ResourceToString(Resource.OTHER));
             ResourceTracker.OnResourceChangedEvent.AddListener(resource =>
             {
                 textPerResource[resource] = ResourceTracker.ResourceToString(resource);
