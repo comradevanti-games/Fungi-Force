@@ -66,7 +66,7 @@ namespace TeamShrimp.GGJ23
             groundTilemap.SetColor(pos, shroom.Owner.ToColor());
         }
 
-        public bool CanPlace(ShroomType type, Vector2Int pos) =>
+        public bool CanPlace(StructureType type, Vector2Int pos) =>
             TryFindShroom(pos).IsNone();
 
         public Vector3 SnapToGridPos(Vector3 worldPos)
@@ -160,15 +160,18 @@ namespace TeamShrimp.GGJ23
 
         private void InstantiateGameMap()
         {
-            InstantiateMapWith(Blackboard.Game.MapSize);
+            InstantiateMapWith(
+                Blackboard.Game.MapSeed,
+                Blackboard.Game.MapSize);
         }
 
-        private void InstantiateMapWith(int size)
+        private void InstantiateMapWith(int seed, int size)
         {
             var defaultTile = tileTypesByName.Values.First();
             var homeStructure = structureTypesByName["Home"];
             var genParams =
-                new MapGen.GenerationParams(size, defaultTile, homeStructure);
+                new MapGen.GenerationParams(seed, size, defaultTile,
+                    homeStructure);
             var map = MapGen.GenerateMap(genParams);
             InstantiateMap(map);
         }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6897660430728232535}
   - component: {fileID: 605877656211792814}
   m_Layer: 0
-  m_Name: NodeShroom - Stalk
+  m_Name: HomeShroom
   m_TagString: Shroom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

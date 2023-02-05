@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace TeamShrimp.GGJ23
 {
@@ -21,7 +23,7 @@ namespace TeamShrimp.GGJ23
             {
                 var isOffset = y % 2 != 0;
                 var width = diameter - Mathf.Abs(y);
-                var minX = isOffset ? (-(width - 1) / 2) - 1 : -width / 2;
+                var minX = isOffset ? -(width - 1) / 2 - 1 : -width / 2;
                 var maxX = isOffset ? (width - 1) / 2 : width / 2;
                 for (var x = minX; x <= maxX; x++)
                     yield return new Vector2Int(x, y);
@@ -40,10 +42,16 @@ namespace TeamShrimp.GGJ23
 
         public static Map GenerateMap(GenerationParams genGenerationParams)
         {
-            var tile = new Tile(genGenerationParams.TileType, 0);
+            Random.InitState(genGenerationParams.Seed);
 
-            Map GeneratePosition(Map map, Vector2Int pos) =>
-                PlaceTileAt(map, pos, tile);
+            var variantCount = genGenerationParams.TileType.Variants.Count();
+            
+            Map GeneratePosition(Map map, Vector2Int pos)
+            {
+                var variantIndex = Random.Range(0, variantCount);
+                var tile = new Tile(genGenerationParams.TileType, variantIndex);
+                return PlaceTileAt(map, pos, tile);
+            }
 
             var tilesOnly = PositionsInMapOfSize(genGenerationParams.Size)
                 .Aggregate(Empty, GeneratePosition);
@@ -56,10 +64,13 @@ namespace TeamShrimp.GGJ23
             var withBlueTeam = PlaceStructureAt(withRedTeam, blueTeamPos,
                 new Structure(genGenerationParams.HomeStructure, Team.Blue));
 
+            Random.InitState(DateTime.Now.GetHashCode());
+
             return withBlueTeam;
         }
 
         public record GenerationParams(
+            int Seed,
             int Size,
             TileType TileType,
             StructureType HomeStructure);
