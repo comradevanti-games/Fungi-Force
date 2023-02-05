@@ -78,7 +78,9 @@ namespace TeamShrimp.GGJ23
                 if (_selectedShroom == null)
                 {
                     Vector3Int gridPosition = map.WorldToGridPos(mousePosition);
-                    _selectedShroom = GetMushroomAtPosition((Vector2Int) gridPosition);
+                    var shroomAsPos = GetMushroomAtPosition((Vector2Int) gridPosition);
+                    if (shroomAsPos && shroomAsPos.Owner == gameManager.MyTeam)
+                        _selectedShroom = shroomAsPos;
                     if (debug)
                         Debug.Log("Found Shroom: " + _selectedShroom);
                 }
