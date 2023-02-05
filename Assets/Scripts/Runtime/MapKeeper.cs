@@ -150,6 +150,13 @@ namespace TeamShrimp.GGJ23
             return result;
         }
 
+        public void RemoveAtPosition(Vector2Int pos)
+        {
+            shroomsByPosition.Remove(pos);
+            //Debug.Log("REMOVING SHROOM AT POSITION " + pos + " FROM MAP " + String.Join(",",
+            //    shroomsByPosition.Values));
+        }
+
         private void InstantiateGameMap()
         {
             InstantiateMapWith(Blackboard.Game.MapSize);
