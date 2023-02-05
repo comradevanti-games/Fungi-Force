@@ -1,58 +1,45 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using TeamShrimp.GGJ23.Runtime.Util;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace TeamShrimp.GGJ23
 {
     public class AntBehaviour : MonoBehaviour
     {
-        public enum AntBehaviourState
-        {
-            SEARCHING,
-            ATTRACTED,
-            WALKING_STRAIGHT
-        }
-
-        public enum OffsetRotation
-        {
-            UP_RIGHT,
-            RIGHT,
-            DOWN_RIGHT,
-            DOWN_LEFT,
-            LEFT,
-            UP_LEFT
-        }
-
         public bool debug;
-
+        
         [SerializeField] private MapKeeper mapKeeper;
 
         [SerializeField] private MushroomManager mushroomManager;
 
         public Grid grid;
-
+        
         [SerializeField] private Vector3Int anthillPosition;
 
         [SerializeField] public Vector3Int currentCubePosition;
-        public int mapSize = 10;
+        
+        [SerializeField] private LinkedList<Vector3Int> trailPrediction = new LinkedList<Vector3Int>();
 
+        private IEnumerator<AntBehaviourPredictionState> pathCreator;
+
+        private LineRenderer lr;
+        public int mapSize = 10;
+        
         public OffsetRotation offsetRotation;
+        
+        private int dontDie = 0;
 
 
         public byte hp = 3;
+        
+        
 
-        private readonly List<Vector3Int> currentPredictionCubeCoords =
-            new List<Vector3Int>();
-
-        private int dontDie;
-        private int j = 0;
-
-        private LineRenderer lr;
-
-
-        private readonly List<Vector3Int> offsets = new List<Vector3Int>
+        private List<Vector3Int> offsets = new List<Vector3Int>()
         {
             new Vector3Int(1, -1), // UP RIGHT
             new Vector3Int(1, 0, -1), // RIGHT
@@ -62,97 +49,87 @@ namespace TeamShrimp.GGJ23
             new Vector3Int(0, -1, 1) // UP LEFT
         };
 
-        private IEnumerator<AntBehaviourPredictionState> pathCreator;
+        private List<Vector3Int> currentPredictionCubeCoords = new List<Vector3Int>();
 
         private IEnumerator patheveryframe;
+        
+        public OffsetRotation RotateDir(OffsetRotation rotation, int rot)
+        {
+            rotation += rot;
+            if (rotation < 0)
+            {
+                rotation += 6;
+            }
+
+            rotation = (OffsetRotation)(((int)rotation) % 6);
+
+            return (OffsetRotation) rotation;
+        }
+
+        public IEnumerator AnimatePositionTo(Vector3 start, Vector3 end, float time, int steps)
+        {
+            for (int i = 0; i < steps; i++)
+            {
+                transform.position = Vector3.Lerp(start, end, i/(float)steps);
+                yield return new WaitForSeconds(time / steps);
+            }
+            transform.position = end;
+        }
+        public IEnumerator AnimateScaleTo(Vector3 start, Vector3 end, float time, int steps)
+        {
+            for (int i = 0; i < steps; i++)
+            {
+                transform.localScale = Vector3.Lerp(start, end, i/(float)steps);
+                yield return new WaitForSeconds(time / steps);
+            }
+            transform.localScale = end;
+        }
 
         private int repetition = 1;
+        private int j = 0;
         private int simulateSteps = 50;
-
-        [SerializeField]
-        private LinkedList<Vector3Int> trailPrediction =
-            new LinkedList<Vector3Int>();
 
         public void Start()
         {
             lr = GetComponent<LineRenderer>();
-            pathCreator = PathCreator(new AntBehaviourPredictionState
+            pathCreator = PathCreator(new AntBehaviourPredictionState()
             {
                 cubePos = anthillPosition,
                 rotation = offsetRotation
             });
             mapSize = Blackboard.Game.MapSize;
-
+            
             patheveryframe = CreatePathEveryFrame(pathCreator);
             InvokeRepeating(nameof(Turn), 1f, 1f);
         }
 
-        public OffsetRotation RotateDir(OffsetRotation rotation, int rot)
+        public Vector3Int? FindClosebyMushroom(Vector3Int pos, OffsetRotation rotation)
         {
-            rotation += rot;
-            if (rotation < 0) rotation += 6;
-
-            rotation = (OffsetRotation) ((int) rotation % 6);
-
-            return rotation;
-        }
-
-        public IEnumerator AnimatePositionTo(
-            Vector3 start, Vector3 end, float time, int steps)
-        {
-            for (var i = 0; i < steps; i++)
+            List<ShroomBase> sb = mapKeeper.AllShrooms.ToList().FindAll((ShroomBase b) => b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) <= 1);
+            if (sb.Count == 0)
             {
-                transform.position =
-                    Vector3.Lerp(start, end, i / (float) steps);
-                yield return new WaitForSeconds(time / steps);
+                return null;
             }
-
-            transform.position = end;
-        }
-
-        public IEnumerator AnimateScaleTo(
-            Vector3 start, Vector3 end, float time, int steps)
-        {
-            for (var i = 0; i < steps; i++)
-            {
-                transform.localScale =
-                    Vector3.Lerp(start, end, i / (float) steps);
-                yield return new WaitForSeconds(time / steps);
-            }
-
-            transform.localScale = end;
-        }
-
-        public Vector3Int? FindClosebyMushroom(
-            Vector3Int pos, OffsetRotation rotation)
-        {
-            var sb = mapKeeper.AllShrooms.Where(b =>
-                b.ShroomPosition.To3Int().OffsetToCube().CubeDistance(pos) <=
-                1).ToList();
-            if (sb.Count == 0) return null;
 
             Debug.Log("FOUND CLOSEBY MUSHROOMS, STEALING ONE");
             foreach (var shroomBase in sb)
             {
-                var nextSpace = pos + offsets[(int) rotation];
-                if (nextSpace.Equals(shroomBase.ShroomPosition.To3Int()
-                        .OffsetToCube()))
+                Vector3Int nextSpace = pos + offsets[(int) rotation];
+                if (nextSpace.Equals(shroomBase.ShroomPosition.To3Int().OffsetToCube()))
                 {
                     KillShroom(shroomBase);
                     return nextSpace;
                 }
             }
-
+            
             sb.Sort((base1, base2) =>
             {
-                return mushroomManager.FindAllShroomConnectionsInvolving(base1)
-                           .Count >
-                       mushroomManager.FindAllShroomConnectionsInvolving(base2)
-                           .Count
+                return mushroomManager.FindAllShroomConnectionsInvolving(base1).Count >
+                       mushroomManager.FindAllShroomConnectionsInvolving(base2).Count
                     ? 1
                     : -1;
             });
-            var next = sb[0].ShroomPosition.To3Int().OffsetToCube();
+            Vector3Int next = sb[0].ShroomPosition.To3Int().OffsetToCube();
             KillShroom(sb[0]);
             return next;
         }
@@ -163,14 +140,12 @@ namespace TeamShrimp.GGJ23
             Destroy(shroomBase.gameObject);
             Debug.Log("KILLING SHROOM  " + shroomBase);
         }
-
+        
         public void LoadPositionFromCubePos()
         {
-            var newPos = grid.CellToWorld(currentCubePosition.CubeToOffset());
-            var ienum = AnimatePositionTo(transform.position, newPos, 0.3f, 5);
-            var ienum2 = AnimateScaleTo(transform.localScale,
-                new Vector3(transform.position.x < newPos.x ? -0.1f : 0.1f,
-                    0.1f, 0.1f), 0.1f, 3);
+            Vector3 newPos = grid.CellToWorld(currentCubePosition.CubeToOffset());
+            IEnumerator ienum = AnimatePositionTo(transform.position, newPos, 0.3f, 5);
+            IEnumerator ienum2 = AnimateScaleTo(transform.localScale, new Vector3(transform.position.x < newPos.x ? -0.1f : 0.1f,0.1f, 0.1f), 0.1f, 3);
             StartCoroutine(ienum2);
             StartCoroutine(ienum);
         }
@@ -180,7 +155,7 @@ namespace TeamShrimp.GGJ23
             patheveryframe.MoveNext();
             LoadPositionFromCubePos();
         }
-
+        
 
         public IEnumerator CreatePathEveryFrame(IEnumerator pathGen)
         {
@@ -191,51 +166,46 @@ namespace TeamShrimp.GGJ23
                     //GameObject g = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     pathGen.MoveNext();
                     abps = (AntBehaviourPredictionState) pathGen.Current;
-                    currentCubePosition = abps.cubePos;
+                    currentCubePosition = (Vector3Int) abps.cubePos;
                     //g.transform.position = grid.CellToWorld(((Vector3Int) abps.cubePos).CubeToOffset());
                     abps.loadPrediction = true;
                 }
 
                 {
-                    var positionsPredicted = new List<Vector3>();
+                    List<Vector3> positionsPredicted = new List<Vector3>();
                     IEnumerator ienum = PathCreator(abps);
 
                     currentPredictionCubeCoords.Clear();
-                    for (var i = 0; i < 5; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         if (!ienum.MoveNext())
                         {
-                            Debug.LogError(
-                                "NO NEXT MOVE ON MOVE SIMULATOR. DROPPING SIM, THIS SHOULD NEVER HAPPEN");
+                            Debug.LogError("NO NEXT MOVE ON MOVE SIMULATOR. DROPPING SIM, THIS SHOULD NEVER HAPPEN");
                             break;
                         }
-
-                        var predState =
-                            (AntBehaviourPredictionState) ienum.Current;
+                        AntBehaviourPredictionState predState = (AntBehaviourPredictionState) ienum.Current;
                         currentPredictionCubeCoords.Add(predState.cubePos);
-                        positionsPredicted.Add(
-                            grid.CellToWorld(predState.cubePos.CubeToOffset()));
+                        positionsPredicted.Add(grid.CellToWorld(((Vector3Int) predState.cubePos).CubeToOffset()));
                     }
 
-                    if (debug) lr.SetPositions(positionsPredicted.ToArray());
+                    if(debug) lr.SetPositions(positionsPredicted.ToArray());
                 }
                 yield return null;
             }
         }
 
 
-        public IEnumerator<AntBehaviourPredictionState> PathCreator(
-            AntBehaviourPredictionState predictionState)
+        public IEnumerator<AntBehaviourPredictionState> PathCreator(AntBehaviourPredictionState predictionState)
         {
             var repetitionInternal = 1;
-            var lastPos = predictionState.cubePos;
-            var internalOffsetRotation = predictionState.rotation;
-            var rotDir = 1;
+            Vector3Int lastPos = predictionState.cubePos;
+            OffsetRotation internalOffsetRotation = predictionState.rotation;
+            int rotDir = 1;
             while (true)
             {
-                for (var phases = 0; phases < 3; phases++)
+                for (int phases = 0; phases < 3; phases++)
                 {
-                    for (var rep = 0; rep < repetitionInternal; rep++)
+                    for (int rep = 0; rep < repetitionInternal; rep++)
                     {
                         if (predictionState.loadPrediction)
                         {
@@ -248,34 +218,25 @@ namespace TeamShrimp.GGJ23
                                 break;
                         }
 
-                        var vector3Int = FindClosebyMushroom(lastPos,
-                            internalOffsetRotation);
+                        Vector3Int? vector3Int = FindClosebyMushroom(lastPos, internalOffsetRotation);
                         if (vector3Int.HasValue)
                         {
                             var off = vector3Int.Value - lastPos;
-                            internalOffsetRotation =
-                                (OffsetRotation) offsets.FindIndex(i =>
-                                    i.Equals(off));
+                            internalOffsetRotation = (OffsetRotation) offsets.FindIndex(i => i.Equals(off));
                             lastPos = vector3Int.Value;
                         }
                         else
-                        {
                             lastPos += offsets[(int) internalOffsetRotation];
-                        }
-
                         // anthillPosition = lastPos;
-                        if (dontDie++ > 1000)
+                        if(dontDie++ > 1000)
                             yield break;
-                        if (Vector3Int.zero.CubeDistance(lastPos) >=
-                            mapSize - 1)
+                        if (Vector3Int.zero.CubeDistance(lastPos) >= mapSize - 1)
                         {
-                            internalOffsetRotation =
-                                RotateDir(internalOffsetRotation, 2);
+                            internalOffsetRotation = RotateDir(internalOffsetRotation, 2);
                             phases = 0;
                             repetitionInternal = 1;
                             break;
                         }
-
                         yield return new AntBehaviourPredictionState
                         {
                             loadPrediction = false,
@@ -287,14 +248,13 @@ namespace TeamShrimp.GGJ23
                             rotDir = rotDir
                         };
                     }
-
-                    internalOffsetRotation =
-                        RotateDir(internalOffsetRotation, rotDir);
+                    internalOffsetRotation = RotateDir(internalOffsetRotation, rotDir);
                 }
-
+                
                 rotDir *= -1;
                 repetitionInternal++;
             }
+            
         }
 
         public struct AntBehaviourPredictionState
@@ -306,6 +266,23 @@ namespace TeamShrimp.GGJ23
             public int rep;
             public int repetitions;
             public int rotDir;
+        }
+        
+        public enum AntBehaviourState
+        {
+            SEARCHING,
+            ATTRACTED,
+            WALKING_STRAIGHT
+        }
+        
+        public enum OffsetRotation
+        {
+            UP_RIGHT,
+            RIGHT,
+            DOWN_RIGHT,
+            DOWN_LEFT,
+            LEFT,
+            UP_LEFT
         }
     }
 }
