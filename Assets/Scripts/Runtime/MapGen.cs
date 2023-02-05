@@ -59,6 +59,8 @@ namespace TeamShrimp.GGJ23
 
         public static Map GenerateMap(GenerationParams genParams)
         {
+            var groundTileType = genParams.TileTypesByName["Forest"];
+
             return WithSeededRandom(genParams.Seed, () =>
             {
                 Vector2Int GenerateFreeTeamPosition(Map map, Team team) =>
@@ -73,22 +75,37 @@ namespace TeamShrimp.GGJ23
                         .Random();
 
                 TileType ChooseTileType() =>
-                    genParams.TileTypesByName.Values.WeightedRandom(it => it.Weight);
+                    genParams.TileTypesByName.Values.WeightedRandom(it =>
+                        it.Weight);
+
+                Tile GenerateTileOfType(TileType type)
+                {
+                    var variantCount = type.Variants.Count();
+                    var variantIndex = Random.Range(0, variantCount);
+                    return new Tile(type, variantIndex);
+                }
 
                 Map GenerateTileAt(Map map, Vector2Int pos)
                 {
                     var tileType = ChooseTileType();
-                    var variantCount = tileType.Variants.Count();
-                    var variantIndex = Random.Range(0, variantCount);
-                    var tile = new Tile(tileType, variantIndex);
+                    var tile = GenerateTileOfType(tileType);
+                    return PlaceTileAt(map, pos, tile);
+                }
+
+                Map PlaceGroundAt(Map map, Vector2Int pos)
+                {
+                    var tile = GenerateTileOfType(groundTileType);
                     return PlaceTileAt(map, pos, tile);
                 }
 
                 Map PlaceHome(Map map, Team team)
                 {
                     var homePos = HomePosition(team, genParams.Size);
-                    return PlaceStructureAt(map, homePos,
-                        new Structure(genParams.HomeStructure, Opt.Some(team)));
+                    var home = new Structure(genParams.HomeStructure,
+                        Opt.Some(team));
+                    return map
+                        .Then(it => PlaceGroundAt(it, homePos))
+                        .Then(it => PlaceStructureAt(it, homePos, home));
                 }
 
                 Map PlaceTeamTree(Map map, Team team)
