@@ -153,6 +153,11 @@ namespace TeamShrimp.GGJ23
             return result;
         }
 
+        public void ClaimArea(ShroomBase root)
+        {
+            
+        }
+
         public void RemoveAtPosition(Vector2Int pos)
         {
             shroomsByPosition.Remove(pos);

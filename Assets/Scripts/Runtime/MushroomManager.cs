@@ -150,6 +150,38 @@ namespace TeamShrimp.GGJ23
                 shroomBase.ShroomId == connection.EndShroom.ShroomId);
         }
 
+        public List<ShroomConnection> FindAllShroomConnectionsStartingWith(ShroomBase shroomBase)
+        {
+            return _shroomConnections.FindAll(connection => connection.StartShroom.ShroomId == shroomBase.ShroomId);
+        }
+
+        public bool IsConnectionLooping(ShroomConnection start)
+        {
+            ShroomConnection current = start;
+            Debug.Log("Connection " + current.StartShroom + " to " + current.EndShroom);
+            Stack<ShroomConnection> toCheck = new Stack<ShroomConnection>();
+            List<long> visitedShrooms = new List<long>();
+            visitedShrooms.Add(start.StartShroom.ShroomId);
+
+            List<ShroomConnection> next = FindAllShroomConnectionsStartingWith(start.EndShroom);
+            next.ForEach(conn => toCheck.Push(conn));
+
+            while (toCheck.TryPop(out current))
+            {
+                Debug.Log("Connection " + current.StartShroom + " to " + current.EndShroom);
+                if (current.StartShroom.ShroomId == start.StartShroom.ShroomId ||
+                    current.EndShroom.ShroomId == start.StartShroom.ShroomId)
+                    return true;
+                if (visitedShrooms.Contains(current.EndShroom.ShroomId) || visitedShrooms.Contains(current.StartShroom.ShroomId))
+                    continue;
+
+                next = FindAllShroomConnectionsStartingWith(current.EndShroom);
+                next.ForEach(conn => toCheck.Push(conn));
+            }
+
+            return false;
+        }
+
         public void KillConnection(ShroomConnection mushroomConnection)
         {
             _shroomConnections.Remove(mushroomConnection);
@@ -229,6 +261,8 @@ namespace TeamShrimp.GGJ23
             var connection = Instantiate(connectionPrefab);
             connection.Initialize(start, end, map);
             _shroomConnections.Add(connection);
+            
+            Debug.Log("Loop: " + IsConnectionLooping(connection));
         }
 
         public ShroomBase GetMushroomAtPosition(Vector2Int gridPosition)

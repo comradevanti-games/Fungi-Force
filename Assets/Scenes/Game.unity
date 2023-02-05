@@ -1354,6 +1354,7 @@ MonoBehaviour:
         m_CallState: 1
   startResourceType: 0
   startResourceValue: 50
+  currentTeam: 0
 --- !u!114 &2121146360
 MonoBehaviour:
   m_ObjectHideFlags: 0
