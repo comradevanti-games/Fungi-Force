@@ -91,15 +91,23 @@ namespace TeamShrimp.GGJ23
         public void Start()
         {
             lr = GetComponent<LineRenderer>();
+        }
+
+        public void Initialize(Vector3Int cubeStartPosition, OffsetRotation offsetRotationInit)
+        {
+            anthillPosition = cubeStartPosition;
+            this.offsetRotation = offsetRotationInit;
+            
             pathCreator = PathCreator(new AntBehaviourPredictionState()
             {
                 cubePos = anthillPosition,
-                rotation = offsetRotation
+                rotation = offsetRotationInit
             });
             mapSize = Blackboard.Game.MapSize;
             
             patheveryframe = CreatePathEveryFrame(pathCreator);
-            InvokeRepeating(nameof(Turn), 1f, 1f);
+            Debug.Log("INITIALIZED ANT");
+            //InvokeRepeating(nameof(Turn), 1f, 1f);
         }
 
         public Vector3Int? FindClosebyMushroom(Vector3Int pos, OffsetRotation rotation, bool isSimulated, List<Vector3Int> ignore)
