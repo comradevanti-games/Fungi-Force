@@ -117,7 +117,7 @@ namespace TeamShrimp.GGJ23
             }
         }
 
-        public ShroomBase TryGetShroomAtPositon(Vector2Int gridPosition)
+        public ShroomBase TryGetShroomAtPosition(Vector2Int gridPosition)
         {
             if (debug)
                 Debug.Log("TryGetShroomAtPosition(" + gridPosition + ")");
