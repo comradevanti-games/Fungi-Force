@@ -127,7 +127,7 @@ namespace TeamShrimp.GGJ23
             checkedCubes.Add(cubedStart);
             cubedStart.CubeNeighbours().ToList()
                 .ForEach(cube => cubesToCheck.Push(cube));
-            
+
             Vector3Int cubeToCheck;
             while (cubesToCheck.TryPop(out cubeToCheck))
             {
@@ -190,11 +190,11 @@ namespace TeamShrimp.GGJ23
             {
                 var worldPos = groundTilemap.CellToWorld(pos.To3Int());
                 var go = Instantiate(structure.Type.Prefab, worldPos,
-                    Quaternion.identity);
+                    structure.Type.Prefab.transform.rotation);
                 go.TryGetComponent<ShroomBase>()
                     .Iter(shroom =>
                     {
-                        shroom.Owner = structure.Team;
+                        structure.Team.Iter(it => shroom.Owner = it);
                         AddShroom(shroom);
                     });
             }
